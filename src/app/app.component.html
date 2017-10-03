@@ -1,20 +1,113 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{title}}!
-  </h1>
-  <img width="300" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-
+<main class="container-fluid" style="margin-top: 10px">
+  <div
+    [ngClass]="{'col-md-12': cars === null && repairs === null, 'col-md-6': cars !== null && repairs === null, 'col-md-4': cars !== null && repairs !== null}">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th>Imię i naziwsko</th>
+              <th>PESEL</th>
+              <th>NIP</th>
+              <th>Numer telefonu</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td><input type="text" class="form-control" placeholder="Imię i nazwisko" [(ngModel)]="newCustomer.name"/>
+              </td>
+              <td><input type="text" class="form-control" placeholder="PESEL" [(ngModel)]="newCustomer.pesel"/></td>
+              <td><input type="text" class="form-control" placeholder="NIP" [(ngModel)]="newCustomer.nip"/></td>
+              <td><input type="text" class="form-control" placeholder="Numer telefonu"
+                         [(ngModel)]="newCustomer.telephoneNumber"/></td>
+              <td>
+                <button class="btn btn-primary" (click)="saveCustomer()">Zapisz</button>
+              </td>
+            </tr>
+            <tr class="link" [ngClass]="{'active': customer === selectedCustomer}" *ngFor="let customer of customers"
+                (click)="selectCustomer(customer)">
+              <td>{{customer.name}}</td>
+              <td>{{customer.pesel}}</td>
+              <td>{{customer.nip}}</td>
+              <td>{{customer.telephoneNumber}}</td>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="cars !== null"
+       [ngClass]="{'col-md-6': cars !== null && repairs === null, 'col-md-4': cars !== null && repairs !== null}">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th>Nazwa</th>
+              <th>Silnik</th>
+              <th>Nr rejestracyjny</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td><input type="text" class="form-control" placeholder="Nazwa" [(ngModel)]="newCar.name"/>
+              </td>
+              <td><input type="text" class="form-control" placeholder="Silnik" [(ngModel)]="newCar.engine"/></td>
+              <td><input type="text" class="form-control" placeholder="Nr rejestracyjny"
+                         [(ngModel)]="newCar.registrationNumber"/></td>
+              <td>
+                <button class="btn btn-primary" (click)="saveCar()">Zapisz</button>
+              </td>
+            </tr>
+            <tr class="link" [ngClass]="{'active': car === selectedCar}" *ngFor="let car of cars"
+                (click)="selectCar(car)">
+              <td>{{car.name}}</td>
+              <td>{{car.engine}}</td>
+              <td>{{car.registrationNumber}}</td>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="repairs !== null" class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th>Opis</th>
+              <th>Data</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td><input type="text" class="form-control" placeholder="Opis" [(ngModel)]="newRepair.description"/>
+              </td>
+              <td><input type="date" class="form-control" placeholder="Data" [(ngModel)]="newRepair.date"/></td>
+              <td>
+                <button class="btn btn-primary" (click)="saveRepair()">Zapisz</button>
+              </td>
+            </tr>
+            <tr *ngFor="let repair of repairs">
+              <td>{{repair.description}}</td>
+              <td>{{repair.date}}</td>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
