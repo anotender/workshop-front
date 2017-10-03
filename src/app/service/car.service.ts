@@ -3,11 +3,12 @@ import {Headers, Http, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs/Rx";
 import {Car} from "../model/car";
 import {Repair} from "../model/repair";
+import {AppConfig} from "../configuration/app.config";
 
 @Injectable()
 export class CarService {
 
-  private API_PREFIX = 'http://localhost:8080';
+  private CARS_API_PREFIX = AppConfig.API_PREFIX + '/cars';
   private HEADERS = new Headers({'Content-Type': 'application/json'});
   private OPTIONS = new RequestOptions({headers: this.HEADERS});
 
@@ -16,16 +17,17 @@ export class CarService {
 
   getRepairsForCar(carId: number): Observable<Repair[]> {
     return this.http
-      .get(this.API_PREFIX + '/cars/' + carId + '/repairs')
+      .get(this.CARS_API_PREFIX + '/' + carId + '/repairs')
       .map(res => res.json()._embedded.repairs)
       .catch(err => Observable.throw(err));
   }
 
   save(car: Car, customerId: number): Observable<any> {
-    car.customer = this.API_PREFIX + '/customers/' + customerId;
+    car.customer = AppConfig.API_PREFIX + '/customers/' + customerId;
     let body = JSON.stringify(car);
     return this.http
-      .post(this.API_PREFIX + '/cars', body, this.OPTIONS)
+      .post(this.CARS_API_PREFIX, body, this.OPTIONS)
+      .map(res => res.json())
       .catch(err => Observable.throw(err));
   }
 

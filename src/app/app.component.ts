@@ -53,7 +53,9 @@ export class AppComponent implements OnInit {
     this.customerService
       .save(this.newCustomer)
       .subscribe(res => {
+        this.newCustomer.id = res.id;
         this.customers.push(this.newCustomer);
+        this.newCustomer = new Customer();
       });
   }
 
@@ -61,7 +63,9 @@ export class AppComponent implements OnInit {
     this.carService
       .save(this.newCar, this.selectedCustomer.id)
       .subscribe(res => {
+        this.newCar.id = res.id;
         this.cars.push(this.newCar);
+        this.newCar = new Car();
       });
   }
 
@@ -69,7 +73,9 @@ export class AppComponent implements OnInit {
     this.repairService
       .save(this.newRepair, this.selectedCar.id)
       .subscribe(res => {
+        this.newRepair.id = res.id;
         this.repairs.push(this.newRepair);
+        this.newRepair = new Repair();
       });
   }
 

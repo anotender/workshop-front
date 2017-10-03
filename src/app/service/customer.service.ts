@@ -3,11 +3,12 @@ import {Headers, Http, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs/Rx";
 import {Customer} from "../model/customer";
 import {Car} from "../model/car";
+import {AppConfig} from "../configuration/app.config";
 
 @Injectable()
 export class CustomerService {
 
-  private CUSTOMERS_API_PREFIX = 'http://localhost:8080/customers';
+  private CUSTOMERS_API_PREFIX = AppConfig.API_PREFIX + '/customers';
   private HEADERS = new Headers({'Content-Type': 'application/json'});
   private OPTIONS = new RequestOptions({headers: this.HEADERS});
 
@@ -32,6 +33,7 @@ export class CustomerService {
     let body = JSON.stringify(customer);
     return this.http
       .post(this.CUSTOMERS_API_PREFIX, body, this.OPTIONS)
+      .map(res => res.json())
       .catch(err => Observable.throw(err));
   }
 
