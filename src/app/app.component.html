@@ -2,6 +2,7 @@
   <div
     [ngClass]="{'col-md-12': cars === null && repairs === null, 'col-md-6': cars !== null && repairs === null, 'col-md-4': cars !== null && repairs !== null}">
     <div class="panel panel-default">
+      <div class="panel-heading">Klienci</div>
       <div class="panel-body">
         <div class="table-responsive">
           <table class="table table-hover">
@@ -43,6 +44,7 @@
   <div *ngIf="cars !== null"
        [ngClass]="{'col-md-6': cars !== null && repairs === null, 'col-md-4': cars !== null && repairs !== null}">
     <div class="panel panel-default">
+      <div class="panel-heading">{{'Samochody ' + selectedCustomer.name}}</div>
       <div class="panel-body">
         <div class="table-responsive">
           <table class="table table-hover">
@@ -80,6 +82,7 @@
   </div>
   <div *ngIf="repairs !== null" class="col-md-4">
     <div class="panel panel-default">
+      <div class="panel-heading">{{'Naprawy ' + selectedCar.name}}</div>
       <div class="panel-body">
         <div class="table-responsive">
           <table class="table table-hover">
