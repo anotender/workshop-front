@@ -3,41 +3,39 @@
     [ngClass]="{'col-md-12': cars === null && repairs === null, 'col-md-6': cars !== null && repairs === null, 'col-md-4': cars !== null && repairs !== null}">
     <div class="panel panel-default">
       <div class="panel-heading">Klienci</div>
-      <div class="panel-body">
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-            <tr>
-              <th>Imię i naziwsko</th>
-              <th>PESEL</th>
-              <th>NIP</th>
-              <th>Numer telefonu</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><input type="text" class="form-control" placeholder="Imię i nazwisko" [(ngModel)]="newCustomer.name"/>
-              </td>
-              <td><input type="text" class="form-control" placeholder="PESEL" [(ngModel)]="newCustomer.pesel"/></td>
-              <td><input type="text" class="form-control" placeholder="NIP" [(ngModel)]="newCustomer.nip"/></td>
-              <td><input type="text" class="form-control" placeholder="Numer telefonu"
-                         [(ngModel)]="newCustomer.telephoneNumber"/></td>
-              <td>
-                <button class="btn btn-primary" (click)="saveCustomer()">Zapisz</button>
-              </td>
-            </tr>
-            <tr class="link" [ngClass]="{'active': customer === selectedCustomer}" *ngFor="let customer of customers"
-                (click)="selectCustomer(customer)">
-              <td>{{customer.name}}</td>
-              <td>{{customer.pesel}}</td>
-              <td>{{customer.nip}}</td>
-              <td>{{customer.telephoneNumber}}</td>
-              <td></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead>
+          <tr>
+            <th>Imię i naziwsko</th>
+            <th>NIP/PESEL</th>
+            <th>Numer telefonu</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>
+              <input type="text" class="form-control" placeholder="Imię i nazwisko" [(ngModel)]="newCustomer.name"/>
+            </td>
+            <td>
+              <input type="text" class="form-control" placeholder="NIP/PESEL" [(ngModel)]="newCustomer.identifier"/>
+            </td>
+            <td><input type="text" class="form-control" placeholder="Numer telefonu"
+                       [(ngModel)]="newCustomer.telephoneNumber"/></td>
+            <td>
+              <button class="btn btn-primary" (click)="saveCustomer()">Zapisz</button>
+            </td>
+          </tr>
+          <tr class="link" [ngClass]="{'active': customer === selectedCustomer}" *ngFor="let customer of customers"
+              (click)="selectCustomer(customer)">
+            <td>{{customer.name}}</td>
+            <td>{{customer.identifier}}</td>
+            <td>{{customer.telephoneNumber}}</td>
+            <td></td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -45,71 +43,67 @@
        [ngClass]="{'col-md-6': cars !== null && repairs === null, 'col-md-4': cars !== null && repairs !== null}">
     <div class="panel panel-default">
       <div class="panel-heading">{{'Samochody ' + selectedCustomer.name}}</div>
-      <div class="panel-body">
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-            <tr>
-              <th>Nazwa</th>
-              <th>Silnik</th>
-              <th>Nr rejestracyjny</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><input type="text" class="form-control" placeholder="Nazwa" [(ngModel)]="newCar.name"/>
-              </td>
-              <td><input type="text" class="form-control" placeholder="Silnik" [(ngModel)]="newCar.engine"/></td>
-              <td><input type="text" class="form-control" placeholder="Nr rejestracyjny"
-                         [(ngModel)]="newCar.registrationNumber"/></td>
-              <td>
-                <button class="btn btn-primary" (click)="saveCar()">Zapisz</button>
-              </td>
-            </tr>
-            <tr class="link" [ngClass]="{'active': car === selectedCar}" *ngFor="let car of cars"
-                (click)="selectCar(car)">
-              <td>{{car.name}}</td>
-              <td>{{car.engine}}</td>
-              <td>{{car.registrationNumber}}</td>
-              <td></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead>
+          <tr>
+            <th>Nazwa</th>
+            <th>Silnik</th>
+            <th>Nr rejestracyjny</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td><input type="text" class="form-control" placeholder="Nazwa" [(ngModel)]="newCar.name"/>
+            </td>
+            <td><input type="text" class="form-control" placeholder="Silnik" [(ngModel)]="newCar.engine"/></td>
+            <td><input type="text" class="form-control" placeholder="Nr rejestracyjny"
+                       [(ngModel)]="newCar.registrationNumber"/></td>
+            <td>
+              <button class="btn btn-primary" (click)="saveCar()">Zapisz</button>
+            </td>
+          </tr>
+          <tr class="link" [ngClass]="{'active': car === selectedCar}" *ngFor="let car of cars"
+              (click)="selectCar(car)">
+            <td>{{car.name}}</td>
+            <td>{{car.engine}}</td>
+            <td>{{car.registrationNumber}}</td>
+            <td></td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
   <div *ngIf="repairs !== null" class="col-md-4">
     <div class="panel panel-default">
       <div class="panel-heading">{{'Naprawy ' + selectedCar.name}}</div>
-      <div class="panel-body">
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-            <tr>
-              <th>Opis</th>
-              <th>Data</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><input type="text" class="form-control" placeholder="Opis" [(ngModel)]="newRepair.description"/>
-              </td>
-              <td><input type="date" class="form-control" placeholder="Data" [(ngModel)]="newRepair.date"/></td>
-              <td>
-                <button class="btn btn-primary" (click)="saveRepair()">Zapisz</button>
-              </td>
-            </tr>
-            <tr *ngFor="let repair of repairs">
-              <td>{{repair.description}}</td>
-              <td>{{repair.date}}</td>
-              <td></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead>
+          <tr>
+            <th>Opis</th>
+            <th>Data</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td><input type="text" class="form-control" placeholder="Opis" [(ngModel)]="newRepair.description"/>
+            </td>
+            <td><input type="date" class="form-control" placeholder="Data" [(ngModel)]="newRepair.date"/></td>
+            <td>
+              <button class="btn btn-primary" (click)="saveRepair()">Zapisz</button>
+            </td>
+          </tr>
+          <tr *ngFor="let repair of repairs">
+            <td>{{repair.description}}</td>
+            <td>{{repair.date}}</td>
+            <td></td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

@@ -1,8 +1,7 @@
 export class Customer {
   id: number;
   name: string = '';
-  pesel: string = '';
-  nip: string = '';
+  identifier: string = '';
   telephoneNumber: string = '';
   cars: string[] = [];
 }
