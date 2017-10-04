@@ -7,10 +7,12 @@ import {AppComponent} from './app.component';
 import {CustomerService} from "./service/customer.service";
 import {CarService} from "./service/car.service";
 import {RepairService} from "./service/repair.service";
+import { CustomersTableComponent } from './component/customers-table/customers-table.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CustomersTableComponent
   ],
   imports: [
     BrowserModule,

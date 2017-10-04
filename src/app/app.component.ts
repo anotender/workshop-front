@@ -33,6 +33,8 @@ export class AppComponent implements OnInit {
   }
 
   selectCustomer(customer: Customer): void {
+    if (customer === this.selectedCustomer) return;
+
     this.selectedCustomer = customer;
     this.cars = null;
     this.repairs = null;
@@ -42,6 +44,8 @@ export class AppComponent implements OnInit {
   }
 
   selectCar(car: Car): void {
+    if (car === this.selectedCar) return;
+
     this.selectedCar = car;
     this.repairs = null;
     this.carService
@@ -77,6 +81,12 @@ export class AppComponent implements OnInit {
         this.repairs.push(this.newRepair);
         this.newRepair = new Repair();
       });
+  }
+
+  deleteRepair(repair: Repair): void {
+    this.repairService
+      .remove(repair.id)
+      .subscribe(res => this.repairs = this.repairs.filter(r => r !== repair));
   }
 
 }

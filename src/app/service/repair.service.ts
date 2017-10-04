@@ -23,4 +23,11 @@ export class RepairService {
       .catch(err => Observable.throw(err));
   }
 
+  remove(repairId: number): Observable<any> {
+    return this.http
+      .delete(this.REPAIRS_API_PREFIX + '/' + repairId)
+      .map(res => res.json())
+      .catch(err => Observable.throw(err));
+  }
+
 }
