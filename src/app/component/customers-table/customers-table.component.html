@@ -1,0 +1,43 @@
+<div class="panel panel-default">
+  <div class="panel-heading">Klienci</div>
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead>
+      <tr>
+        <th>Nazwa</th>
+        <th>Adres</th>
+        <th>NIP/PESEL</th>
+        <th>Numer telefonu</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          <input type="text" class="form-control" placeholder="Imię i nazwisko lub nazwa firmy"
+                 [(ngModel)]="newCustomer.name"/>
+        </td>
+        <td>
+          <input type="text" class="form-control" placeholder="Adres" [(ngModel)]="newCustomer.address"/>
+        </td>
+        <td>
+          <input type="text" class="form-control" placeholder="NIP/PESEL" [(ngModel)]="newCustomer.identifier"/>
+        </td>
+        <td><input type="text" class="form-control" placeholder="Numer telefonu"
+                   [(ngModel)]="newCustomer.telephoneNumber"/></td>
+        <td>
+          <button class="btn btn-primary" (click)="saveCustomer()">Zapisz</button>
+        </td>
+      </tr>
+      <tr class="link" [ngClass]="{'active': customer === selectedCustomer}" *ngFor="let customer of customers"
+          (click)="selectCustomer(customer)">
+        <td>{{customer.name}}</td>
+        <td>{{customer.address}}</td>
+        <td>{{customer.identifier}}</td>
+        <td>{{customer.telephoneNumber}}</td>
+        <td></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

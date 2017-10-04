@@ -1,0 +1,49 @@
+<div class="panel panel-default">
+  <div class="panel-heading">{{'Naprawy ' + _car.name}}</div>
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead>
+      <tr>
+        <th>Opis</th>
+        <th>Robocizna</th>
+        <th>Cena&nbsp;części</th>
+        <th>Data</th>
+        <th>Uwagi</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          <textarea class="form-control" rows="5" placeholder="Opis" [(ngModel)]="newRepair.description"></textarea>
+        </td>
+        <td>
+          <input type="number" class="form-control" placeholder="Robocizna" [(ngModel)]="newRepair.workCost"/>
+        </td>
+        <td>
+          <input type="number" class="form-control" placeholder="Cena części" [(ngModel)]="newRepair.partsCost"/>
+        </td>
+        <td>
+          <input type="date" class="form-control" placeholder="Data" [(ngModel)]="newRepair.date"/>
+        </td>
+        <td>
+          <textarea class="form-control" rows="5" placeholder="Uwagi" [(ngModel)]="newRepair.comments"></textarea>
+        </td>
+        <td>
+          <button class="btn btn-primary" (click)="saveRepair()">Zapisz</button>
+        </td>
+      </tr>
+      <tr *ngFor="let repair of repairs">
+        <td>{{repair.description}}</td>
+        <td>{{repair.workCost}}</td>
+        <td>{{repair.partsCost}}</td>
+        <td>{{repair.date}}</td>
+        <td>{{repair.comments}}</td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteRepair(repair)">Usuń</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
