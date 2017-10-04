@@ -1,6 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Customer} from "../../model/customer";
 import {CustomerService} from "../../service/customer.service";
+import {NgProgressService} from "ngx-progressbar";
 
 @Component({
   selector: 'app-customers-table',
@@ -14,13 +15,17 @@ export class CustomersTableComponent implements OnInit {
   selectedCustomer: Customer = null;
   customers: Customer[] = [];
 
-  constructor(private customerService: CustomerService) {
+  constructor(private customerService: CustomerService, private progressService: NgProgressService) {
   }
 
   ngOnInit() {
+    this.progressService.start();
     this.customerService
       .getCustomers()
-      .subscribe(customers => this.customers = customers);
+      .subscribe(customers => {
+        this.customers = customers;
+        this.progressService.done();
+      });
   }
 
   selectCustomer(customer: Customer): void {
@@ -31,12 +36,14 @@ export class CustomersTableComponent implements OnInit {
   }
 
   saveCustomer(): void {
+    this.progressService.start();
     this.customerService
       .save(this.newCustomer)
       .subscribe(res => {
         this.newCustomer.id = res.id;
         this.customers.push(this.newCustomer);
         this.newCustomer = new Customer();
+        this.progressService.done();
       });
   }
 

@@ -31,4 +31,11 @@ export class CarService {
       .catch(err => Observable.throw(err));
   }
 
+  remove(carId: number): Observable<any> {
+    return this.http
+      .delete(this.CARS_API_PREFIX + '/' + carId)
+      .map(res => res.json())
+      .catch(err => Observable.throw(err));
+  }
+
 }

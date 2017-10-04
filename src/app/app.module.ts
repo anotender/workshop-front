@@ -9,7 +9,8 @@ import {CarService} from "./service/car.service";
 import {RepairService} from "./service/repair.service";
 import {CustomersTableComponent} from './component/customers-table/customers-table.component';
 import {CarsTableComponent} from './component/cars-table/cars-table.component';
-import { RepairsTableComponent } from './component/repairs-table/repairs-table.component';
+import {RepairsTableComponent} from './component/repairs-table/repairs-table.component';
+import {NgProgressModule} from "ngx-progressbar";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { RepairsTableComponent } from './component/repairs-table/repairs-table.c
   imports: [
     BrowserModule,
     HttpModule,
-    FormsModule
+    FormsModule,
+    NgProgressModule
   ],
   providers: [
     CustomerService,

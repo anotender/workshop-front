@@ -29,7 +29,9 @@
         <td>{{car.engine}}</td>
         <td>{{car.vin}}</td>
         <td>{{car.registrationNumber}}</td>
-        <td></td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteCar(car)">Usuń</button>
+        </td>
       </tr>
       </tbody>
     </table>
