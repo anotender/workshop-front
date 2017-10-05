@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Car} from "../../model/car";
 import {CarService} from "../../service/car.service";
 import {Customer} from "../../model/customer";
@@ -13,6 +13,7 @@ import {NgProgressService} from "ngx-progressbar";
 export class CarsTableComponent {
   @Output() carSelected: EventEmitter<Car> = new EventEmitter<Car>();
 
+  carFilterText: string = '';
   newCar: Car = new Car();
   cars: Car[] = [];
   selectedCar: Car = null;
@@ -59,6 +60,7 @@ export class CarsTableComponent {
     this.carService
       .remove(car.id)
       .subscribe(res => {
+        if (car === this.selectedCar) this.carSelected.emit(null);
         this.cars = this.cars.filter(c => c !== car);
         this.progressService.done();
       });

@@ -37,4 +37,11 @@ export class CustomerService {
       .catch(err => Observable.throw(err));
   }
 
+  remove(customerId: number): Observable<any> {
+    return this.http
+      .delete(this.CUSTOMERS_API_PREFIX + '/' + customerId)
+      .map(res => res.json())
+      .catch(err => Observable.throw(err));
+  }
+
 }

@@ -11,6 +11,7 @@ import {NgProgressService} from "ngx-progressbar";
 export class CustomersTableComponent implements OnInit {
   @Output() customerSelected: EventEmitter<Customer> = new EventEmitter<Customer>();
 
+  customerFilterText: string = '';
   newCustomer: Customer = new Customer();
   selectedCustomer: Customer = null;
   customers: Customer[] = [];
@@ -47,5 +48,15 @@ export class CustomersTableComponent implements OnInit {
       });
   }
 
+  deleteCustomer(customer: Customer): void {
+    this.progressService.start();
+    this.customerService
+      .remove(customer.id)
+      .subscribe(res => {
+        if (customer === this.selectedCustomer) this.customerSelected.emit(null);
+        this.customers = this.customers.filter(c => c !== customer);
+        this.progressService.done();
+      });
+  }
 
 }

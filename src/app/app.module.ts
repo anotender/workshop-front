@@ -11,13 +11,17 @@ import {CustomersTableComponent} from './component/customers-table/customers-tab
 import {CarsTableComponent} from './component/cars-table/cars-table.component';
 import {RepairsTableComponent} from './component/repairs-table/repairs-table.component';
 import {NgProgressModule} from "ngx-progressbar";
+import {CustomerFilterPipe} from "./pipe/customer-filter.pipe";
+import {CarFilterPipe} from "./pipe/car-filter.pipe";
 
 @NgModule({
   declarations: [
     AppComponent,
     CustomersTableComponent,
     CarsTableComponent,
-    RepairsTableComponent
+    RepairsTableComponent,
+    CustomerFilterPipe,
+    CarFilterPipe
   ],
   imports: [
     BrowserModule,

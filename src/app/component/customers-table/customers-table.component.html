@@ -1,6 +1,12 @@
-<div class="panel panel-default">
-  <div class="panel-heading">Klienci</div>
-  <div class="table-responsive">
+<div class="panel panel-default container-fluid">
+  <div class="panel-heading row">
+    <div class="pull-left">Klienci</div>
+    <div class="pull-right">
+      <input type="text" class="form-control" [(ngModel)]="customerFilterText" placeholder="Szukaj"/>
+    </div>
+  </div>
+  <div class="table-responsive row">
+
     <table class="table table-hover table-bordered">
       <thead>
       <tr>
@@ -29,13 +35,15 @@
           <button class="btn btn-primary" (click)="saveCustomer()">Zapisz</button>
         </td>
       </tr>
-      <tr class="link" [ngClass]="{'active': customer === selectedCustomer}" *ngFor="let customer of customers"
-          (click)="selectCustomer(customer)">
+      <tr class="link" [ngClass]="{'active': customer === selectedCustomer}" (click)="selectCustomer(customer)"
+          *ngFor="let customer of customers | customerFilter: customerFilterText">
         <td>{{customer.name}}</td>
         <td>{{customer.address}}</td>
         <td>{{customer.identifier}}</td>
         <td>{{customer.telephoneNumber}}</td>
-        <td></td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteCustomer(customer)">Usuń</button>
+        </td>
       </tr>
       </tbody>
     </table>
