@@ -31,6 +31,15 @@ export class CarService {
       .catch(err => Observable.throw(err));
   }
 
+  edit(carId: number, car: Car, customerId: number): Observable<any> {
+    car.customer = AppConfig.API_PREFIX + '/customers/' + customerId;
+    let body = JSON.stringify(car);
+    return this.http
+      .patch(this.CARS_API_PREFIX + '/' + carId, body, this.OPTIONS)
+      .map(res => res.json())
+      .catch(err => Observable.throw(err));
+  }
+
   remove(carId: number): Observable<any> {
     return this.http
       .delete(this.CARS_API_PREFIX + '/' + carId)

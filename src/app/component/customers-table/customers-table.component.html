@@ -6,7 +6,6 @@
     </div>
   </div>
   <div class="table-responsive row">
-
     <table class="table table-hover table-bordered">
       <thead>
       <tr>
@@ -14,27 +13,13 @@
         <th>Adres</th>
         <th>NIP/PESEL</th>
         <th>Numer telefonu</th>
+        <th>
+          <button class="btn btn-default btn-table" (click)="showCustomerForm($event, modal)">Nowy klient</button>
+        </th>
         <th></th>
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>
-          <input type="text" class="form-control" placeholder="Imię i nazwisko lub nazwa firmy"
-                 [(ngModel)]="newCustomer.name"/>
-        </td>
-        <td>
-          <input type="text" class="form-control" placeholder="Adres" [(ngModel)]="newCustomer.address"/>
-        </td>
-        <td>
-          <input type="text" class="form-control" placeholder="NIP/PESEL" [(ngModel)]="newCustomer.identifier"/>
-        </td>
-        <td><input type="text" class="form-control" placeholder="Numer telefonu"
-                   [(ngModel)]="newCustomer.telephoneNumber"/></td>
-        <td>
-          <button class="btn btn-primary" (click)="saveCustomer()">Zapisz</button>
-        </td>
-      </tr>
       <tr class="link" [ngClass]="{'active': customer === selectedCustomer}" (click)="selectCustomer(customer)"
           *ngFor="let customer of customers | customerFilter: customerFilterText">
         <td>{{customer.name}}</td>
@@ -42,10 +27,58 @@
         <td>{{customer.identifier}}</td>
         <td>{{customer.telephoneNumber}}</td>
         <td>
-          <button class="btn btn-danger" (click)="deleteCustomer(customer)">Usuń</button>
+          <button class="btn btn-primary btn-table" (click)="showCustomerForm($event, modal, customer)">
+            Edytuj
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-danger btn-table" (click)="$event.stopPropagation();deleteCustomer(customer)">
+            Usuń
+          </button>
         </td>
       </tr>
       </tbody>
     </table>
   </div>
 </div>
+
+<bs-modal #modal (onClose)="customerForm.reset()" (onDismiss)="customerForm.reset()">
+  <bs-modal-header>
+    <h4 class="modal-title">Klient</h4>
+  </bs-modal-header>
+  <form (ngSubmit)="submitCustomerForm(modal, customerForm.value)" [formGroup]="customerForm">
+    <bs-modal-body>
+      <div class="form-group" [ngClass]="{'has-error': name.invalid && (name.dirty || name.touched)}">
+        <input type="text" name="name" placeholder="Imię i nazwisko lub nazwa firmy" class="form-control"
+               required="required" formControlName="name"/>
+        <div *ngIf="name.invalid && (name.dirty || name.touched)">
+          <span class="help-block" *ngIf="name.errors.required">To pole jest wymagane</span>
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{'has-error': address.invalid && (address.dirty || address.touched)}">
+        <input type="text" name="address" placeholder="Adres" class="form-control" formControlName="address">
+      </div>
+      <div class="form-group" [ngClass]="{'has-error': identifier.invalid && (identifier.dirty || identifier.touched)}">
+        <input type="text" name="identifier" placeholder="NIP/PESEL" class="form-control"
+               required="required" formControlName="identifier"/>
+        <div *ngIf="identifier.invalid && (identifier.dirty || identifier.touched)">
+          <span class="help-block" *ngIf="identifier.errors.required">To pole jest wymagane</span>
+        </div>
+      </div>
+      <div class="form-group"
+           [ngClass]="{'has-error': telephoneNumber.invalid && (telephoneNumber.dirty || telephoneNumber.touched)}">
+        <input type="text" name="telephoneNumber" placeholder="Numer telefonu" class="form-control"
+               formControlName="telephoneNumber"/>
+        <div *ngIf="telephoneNumber.invalid && (telephoneNumber.dirty || telephoneNumber.touched)">
+          <span class="help-block" *ngIf="telephoneNumber.errors.pattern">Wpisz poprawny numer telefonu</span>
+        </div>
+      </div>
+    </bs-modal-body>
+    <bs-modal-footer>
+      <button class="btn btn-primary" type="submit" [disabled]="customerForm.invalid">
+        Zapisz
+      </button>
+      <button class="btn btn-default" type="button" (click)="modal.dismiss()">Anuluj</button>
+    </bs-modal-footer>
+  </form>
+</bs-modal>

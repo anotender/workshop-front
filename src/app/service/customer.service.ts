@@ -37,6 +37,14 @@ export class CustomerService {
       .catch(err => Observable.throw(err));
   }
 
+  edit(customerId: number, customer: Customer): Observable<any> {
+    let body = JSON.stringify(customer);
+    return this.http
+      .patch(this.CUSTOMERS_API_PREFIX + '/' + customerId, body, this.OPTIONS)
+      .map(res => res.json())
+      .catch(err => Observable.throw(err));
+  }
+
   remove(customerId: number): Observable<any> {
     return this.http
       .delete(this.CUSTOMERS_API_PREFIX + '/' + customerId)

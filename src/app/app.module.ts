@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {HttpModule} from '@angular/http';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {AppComponent} from './app.component';
 import {CustomerService} from "./service/customer.service";
@@ -13,6 +13,7 @@ import {RepairsTableComponent} from './component/repairs-table/repairs-table.com
 import {NgProgressModule} from "ngx-progressbar";
 import {CustomerFilterPipe} from "./pipe/customer-filter.pipe";
 import {CarFilterPipe} from "./pipe/car-filter.pipe";
+import {BsModalModule} from "ng2-bs3-modal";
 
 @NgModule({
   declarations: [
@@ -27,7 +28,9 @@ import {CarFilterPipe} from "./pipe/car-filter.pipe";
     BrowserModule,
     HttpModule,
     FormsModule,
-    NgProgressModule
+    ReactiveFormsModule,
+    NgProgressModule,
+    BsModalModule
   ],
   providers: [
     CustomerService,

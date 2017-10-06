@@ -23,6 +23,15 @@ export class RepairService {
       .catch(err => Observable.throw(err));
   }
 
+  edit(repairId: number, repair: Repair, carId: number): Observable<any> {
+    repair.car = AppConfig.API_PREFIX + '/cars/' + carId;
+    let body = JSON.stringify(repair);
+    return this.http
+      .patch(this.REPAIRS_API_PREFIX + '/' + repairId, body, this.OPTIONS)
+      .map(res => res.json())
+      .catch(err => Observable.throw(err));
+  }
+
   remove(repairId: number): Observable<any> {
     return this.http
       .delete(this.REPAIRS_API_PREFIX + '/' + repairId)

@@ -4,5 +4,4 @@ export class Customer {
   address: string = '';
   identifier: string = '';
   telephoneNumber: string = '';
-  cars: string[] = [];
 }

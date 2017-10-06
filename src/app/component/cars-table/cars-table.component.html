@@ -13,21 +13,15 @@
         <th>Silnik</th>
         <th>VIN</th>
         <th>Nr rejestracyjny</th>
+        <th>
+          <button class="btn btn-default btn-table" (click)="showCarForm($event, modal)">
+            Nowy samochód
+          </button>
+        </th>
         <th></th>
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td><input type="text" class="form-control" placeholder="Nazwa" [(ngModel)]="newCar.name"/>
-        </td>
-        <td><input type="text" class="form-control" placeholder="Silnik" [(ngModel)]="newCar.engine"/></td>
-        <td><input type="text" class="form-control" placeholder="VIN" [(ngModel)]="newCar.vin"/></td>
-        <td><input type="text" class="form-control" placeholder="Nr rejestracyjny"
-                   [(ngModel)]="newCar.registrationNumber"/></td>
-        <td>
-          <button class="btn btn-primary" (click)="saveCar()">Zapisz</button>
-        </td>
-      </tr>
       <tr class="link" [ngClass]="{'active': car === selectedCar}" *ngFor="let car of cars | carFilter: carFilterText"
           (click)="selectCar(car)">
         <td>{{car.name}}</td>
@@ -35,10 +29,56 @@
         <td>{{car.vin}}</td>
         <td>{{car.registrationNumber}}</td>
         <td>
-          <button class="btn btn-danger" (click)="deleteCar(car)">Usuń</button>
+          <button class="btn btn-primary btn-table" (click)="showCarForm($event, modal, car)">
+            Edytuj
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-danger btn-table" (click)="$event.stopPropagation();deleteCar(car)">Usuń</button>
         </td>
       </tr>
       </tbody>
     </table>
   </div>
 </div>
+
+<bs-modal #modal (onClose)="carForm.reset()" (onDismiss)="carForm.reset()">
+  <bs-modal-header>
+    <h4 class="modal-title">Samochód</h4>
+  </bs-modal-header>
+  <form (ngSubmit)="submitCarForm(modal, carForm.value)" [formGroup]="carForm">
+    <bs-modal-body>
+      <div class="form-group" [ngClass]="{'has-error': name.invalid && (name.dirty || name.touched)}">
+        <input type="text" name="name" placeholder="Nazwa" class="form-control" required="required"
+               formControlName="name"/>
+        <div *ngIf="name.invalid && (name.dirty || name.touched)">
+          <span class="help-block" *ngIf="name.errors.required">To pole jest wymagane</span>
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{'has-error': engine.invalid && (engine.dirty || engine.touched)}">
+        <input type="text" name="engine" placeholder="Silnik" class="form-control" formControlName="engine"
+               required="required">
+        <div *ngIf="engine.invalid && (engine.dirty || engine.touched)">
+          <span class="help-block" *ngIf="engine.errors.required">To pole jest wymagane</span>
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{'has-error': vin.invalid && (vin.dirty || vin.touched)}">
+        <input type="text" name="vin" placeholder="VIN" class="form-control" formControlName="vin"/>
+      </div>
+      <div class="form-group"
+           [ngClass]="{'has-error': registrationNumber.invalid && (registrationNumber.dirty || registrationNumber.touched)}">
+        <input type="text" name="registrationNumber" placeholder="Numer rejestracyjny" class="form-control"
+               formControlName="registrationNumber" required="required"/>
+        <div *ngIf="registrationNumber.invalid && (registrationNumber.dirty || registrationNumber.touched)">
+          <span class="help-block" *ngIf="registrationNumber.errors.required">To pole jest wymagane</span>
+        </div>
+      </div>
+    </bs-modal-body>
+    <bs-modal-footer>
+      <button class="btn btn-primary" type="submit" [disabled]="carForm.invalid">
+        Zapisz
+      </button>
+      <button class="btn btn-default" type="button" (click)="modal.dismiss()">Anuluj</button>
+    </bs-modal-footer>
+  </form>
+</bs-modal>

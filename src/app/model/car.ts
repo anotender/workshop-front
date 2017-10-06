@@ -5,5 +5,4 @@ export class Car {
   vin: string = '';
   registrationNumber: string = '';
   customer: string = '';
-  repairs: string[] = [];
 }

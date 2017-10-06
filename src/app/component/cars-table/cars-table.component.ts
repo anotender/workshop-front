@@ -1,27 +1,40 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Car} from "../../model/car";
 import {CarService} from "../../service/car.service";
 import {Customer} from "../../model/customer";
 import {CustomerService} from "../../service/customer.service";
 import {NgProgressService} from "ngx-progressbar";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-cars-table',
   templateUrl: './cars-table.component.html',
   styleUrls: ['./cars-table.component.css']
 })
-export class CarsTableComponent {
+export class CarsTableComponent implements OnInit {
   @Output() carSelected: EventEmitter<Car> = new EventEmitter<Car>();
 
   carFilterText: string = '';
-  newCar: Car = new Car();
   cars: Car[] = [];
   selectedCar: Car = null;
   _customer: Customer = null;
 
+  //car form
+  carId: FormControl;
+  name: FormControl;
+  engine: FormControl;
+  vin: FormControl;
+  registrationNumber: FormControl;
+  carForm: FormGroup;
+
   constructor(private customerService: CustomerService,
               private carService: CarService,
-              private progressService: NgProgressService) {
+              private progressService: NgProgressService,
+              private fb: FormBuilder) {
+  }
+
+  ngOnInit(): void {
+    this.carForm = this.initCarForm();
   }
 
   @Input()
@@ -43,14 +56,61 @@ export class CarsTableComponent {
     this.carSelected.emit(car);
   }
 
-  saveCar(): void {
+  showCarForm(event, modal, car?: Car): void {
+    event.stopPropagation();
+
+    if (car) {
+      this.carId.setValue(car.id);
+      this.name.setValue(car.name);
+      this.engine.setValue(car.engine);
+      this.vin.setValue(car.vin);
+      this.registrationNumber.setValue(car.registrationNumber);
+    }
+
+    modal.open();
+  }
+
+  submitCarForm(modal, value): void {
+    let car: Car = new Car();
+    car.id = value.carId;
+    car.name = value.name;
+    car.engine = value.engine;
+    car.vin = value.vin;
+    car.registrationNumber = value.registrationNumber;
+
+    if (value.carId) {
+      this.editCar(car);
+    } else {
+      this.saveCar(car);
+    }
+
+    modal.close();
+  }
+
+  saveCar(car: Car): void {
     this.progressService.start();
     this.carService
-      .save(this.newCar, this._customer.id)
+      .save(car, this._customer.id)
       .subscribe(res => {
-        this.newCar.id = res.id;
-        this.cars.push(this.newCar);
-        this.newCar = new Car();
+        car.id = res.id;
+        this.cars.push(car);
+        this.progressService.done();
+      }, err => {
+        console.log(err);
+        this.progressService.done();
+      });
+  }
+
+  editCar(car: Car): void {
+    this.progressService.start();
+    this.carService
+      .edit(car.id, car, this._customer.id)
+      .subscribe(res => {
+        let index: number = this.cars.findIndex(c => c.id === car.id);
+        this.cars[index] = car;
+        this.progressService.done();
+      }, err => {
+        console.log(err);
         this.progressService.done();
       });
   }
@@ -61,9 +121,31 @@ export class CarsTableComponent {
       .remove(car.id)
       .subscribe(res => {
         if (car === this.selectedCar) this.carSelected.emit(null);
-        this.cars = this.cars.filter(c => c !== car);
+
+        let index: number = this.cars.findIndex(c => c === car);
+        if (index > -1) {
+          this.cars.splice(index, 1);
+        }
+
         this.progressService.done();
       });
+  }
+
+  private initCarForm(): FormGroup {
+    this.carId = new FormControl('');
+    this.name = new FormControl('', [Validators.required]);
+    this.engine = new FormControl('', [Validators.required]);
+    this.vin = new FormControl('');
+    this.registrationNumber = new FormControl('', [Validators.required]);
+
+    return this.fb.group({
+      carId: this.carId,
+      name: this.name,
+      engine: this.engine,
+      vin: this.vin,
+      registrationNumber: this.registrationNumber
+    });
+
   }
 
 }

@@ -8,42 +8,104 @@
         <th>Robocizna</th>
         <th>Cena&nbsp;części</th>
         <th>Data</th>
+        <th>Przebieg</th>
         <th>Uwagi</th>
+        <th>
+          <button class="btn btn-default btn-table" (click)="showRepairForm(modal)">
+            Nowa naprawa
+          </button>
+        </th>
         <th></th>
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>
-          <textarea class="form-control" rows="5" placeholder="Opis" [(ngModel)]="newRepair.description"></textarea>
-        </td>
-        <td>
-          <input type="number" class="form-control" placeholder="Robocizna" [(ngModel)]="newRepair.workCost"/>
-        </td>
-        <td>
-          <input type="number" class="form-control" placeholder="Cena części" [(ngModel)]="newRepair.partsCost"/>
-        </td>
-        <td>
-          <input type="date" class="form-control" placeholder="Data" [(ngModel)]="newRepair.date"/>
-        </td>
-        <td>
-          <textarea class="form-control" rows="5" placeholder="Uwagi" [(ngModel)]="newRepair.comments"></textarea>
-        </td>
-        <td>
-          <button class="btn btn-primary" (click)="saveRepair()">Zapisz</button>
-        </td>
-      </tr>
       <tr *ngFor="let repair of repairs">
         <td>{{repair.description}}</td>
         <td>{{repair.workCost}}</td>
         <td>{{repair.partsCost}}</td>
         <td>{{repair.date}}</td>
+        <td>{{repair.carMileage}}</td>
         <td>{{repair.comments}}</td>
         <td>
-          <button class="btn btn-danger" (click)="deleteRepair(repair)">Usuń</button>
+          <button class="btn btn-primary btn-table" (click)="showRepairForm(modal, repair)">
+            Edytuj
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-danger btn-table" (click)="deleteRepair(repair)">Usuń</button>
         </td>
       </tr>
       </tbody>
     </table>
   </div>
 </div>
+
+<bs-modal #modal (onClose)="repairForm.reset()" (onDismiss)="repairForm.reset()">
+  <bs-modal-header>
+    <h4 class="modal-title">Naprawa</h4>
+  </bs-modal-header>
+  <form (ngSubmit)="submitRepairForm(modal, repairForm.value)" [formGroup]="repairForm">
+    <bs-modal-body>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group"
+               [ngClass]="{'has-error': description.invalid && (description.dirty || description.touched)}">
+            <textarea rows="5" name="description" placeholder="Opis" class="form-control" required="required"
+                      formControlName="description"></textarea>
+            <div *ngIf="description.invalid && (description.dirty || description.touched)">
+              <span class="help-block" *ngIf="description.errors.required">To pole jest wymagane</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="{'has-error': workCost.invalid && (workCost.dirty || workCost.touched)}">
+            <input type="number" name="workCost" placeholder="Robocizna" class="form-control"
+                   formControlName="workCost">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group"
+               [ngClass]="{'has-error': partsCost.invalid && (partsCost.dirty || partsCost.touched)}">
+            <input type="number" name="partsCost" placeholder="Cena części" class="form-control"
+                   formControlName="partsCost">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group" [ngClass]="{'has-error': date.invalid && (date.dirty || date.touched)}">
+            <input type="date" name="date" placeholder="Data" class="form-control" formControlName="date"
+                   required="required"/>
+            <div *ngIf="date.invalid && (date.dirty || date.touched)">
+              <span class="help-block" *ngIf="date.errors.required">To pole jest wymagane</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group"
+               [ngClass]="{'has-error': carMileage.invalid && (carMileage.dirty || carMileage.touched)}">
+            <input type="number" name="carMileage" placeholder="Przebieg" class="form-control"
+                   formControlName="carMileage">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group"
+               [ngClass]="{'has-error': comments.invalid && (comments.dirty || comments.touched)}">
+          <textarea rows="5" name="comments" placeholder="Uwagi" class="form-control"
+                    formControlName="comments"></textarea>
+          </div>
+        </div>
+      </div>
+    </bs-modal-body>
+    <bs-modal-footer>
+      <button class="btn btn-primary" type="submit" [disabled]="repairForm.invalid">
+        Zapisz
+      </button>
+      <button class="btn btn-default" type="button" (click)="modal.dismiss()">Anuluj</button>
+    </bs-modal-footer>
+  </form>
+</bs-modal>

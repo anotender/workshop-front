@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Customer} from "../../model/customer";
 import {CustomerService} from "../../service/customer.service";
 import {NgProgressService} from "ngx-progressbar";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-customers-table',
@@ -12,15 +13,27 @@ export class CustomersTableComponent implements OnInit {
   @Output() customerSelected: EventEmitter<Customer> = new EventEmitter<Customer>();
 
   customerFilterText: string = '';
-  newCustomer: Customer = new Customer();
   selectedCustomer: Customer = null;
   customers: Customer[] = [];
 
-  constructor(private customerService: CustomerService, private progressService: NgProgressService) {
+  //customer form
+  customerId: FormControl;
+  name: FormControl;
+  address: FormControl;
+  identifier: FormControl;
+  telephoneNumber: FormControl;
+  customerForm: FormGroup;
+
+  constructor(private customerService: CustomerService,
+              private progressService: NgProgressService,
+              private fb: FormBuilder) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.progressService.start();
+
+    this.customerForm = this.initCustomerForm();
+
     this.customerService
       .getCustomers()
       .subscribe(customers => {
@@ -36,14 +49,61 @@ export class CustomersTableComponent implements OnInit {
     this.customerSelected.emit(customer);
   }
 
-  saveCustomer(): void {
+  showCustomerForm(event, modal, customer?: Customer): void {
+    event.stopPropagation();
+
+    if (customer) {
+      this.customerId.setValue(customer.id);
+      this.name.setValue(customer.name);
+      this.address.setValue(customer.address);
+      this.identifier.setValue(customer.identifier);
+      this.telephoneNumber.setValue(customer.telephoneNumber);
+    }
+
+    modal.open();
+  }
+
+  submitCustomerForm(modal, value): void {
+    let customer: Customer = new Customer();
+    customer.id = value.customerId;
+    customer.name = value.name;
+    customer.address = value.address;
+    customer.identifier = value.identifier;
+    customer.telephoneNumber = value.telephoneNumber;
+
+    if (value.customerId) {
+      this.editCustomer(customer);
+    } else {
+      this.saveCustomer(customer);
+    }
+
+    modal.close();
+  }
+
+  saveCustomer(customer: Customer): void {
     this.progressService.start();
     this.customerService
-      .save(this.newCustomer)
+      .save(customer)
       .subscribe(res => {
-        this.newCustomer.id = res.id;
-        this.customers.push(this.newCustomer);
-        this.newCustomer = new Customer();
+        customer.id = res.id;
+        this.customers.push(customer);
+        this.progressService.done();
+      }, err => {
+        console.log(err);
+        this.progressService.done();
+      });
+  }
+
+  editCustomer(customer: Customer): void {
+    this.progressService.start();
+    this.customerService
+      .edit(customer.id, customer)
+      .subscribe(res => {
+        let index: number = this.customers.findIndex(c => c.id === customer.id);
+        this.customers[index] = customer;
+        this.progressService.done();
+      }, err => {
+        console.log(err);
         this.progressService.done();
       });
   }
@@ -53,10 +113,36 @@ export class CustomersTableComponent implements OnInit {
     this.customerService
       .remove(customer.id)
       .subscribe(res => {
-        if (customer === this.selectedCustomer) this.customerSelected.emit(null);
-        this.customers = this.customers.filter(c => c !== customer);
+        if (customer === this.selectedCustomer) {
+          this.customerSelected.emit(null);
+        }
+
+        let index: number = this.customers.findIndex(c => c === customer);
+        if (index > -1) {
+          this.customers.splice(index, 1);
+        }
+
+        this.progressService.done();
+      }, err => {
+        console.log(err);
         this.progressService.done();
       });
+  }
+
+  private initCustomerForm(): FormGroup {
+    this.customerId = new FormControl('');
+    this.name = new FormControl('', [Validators.required]);
+    this.address = new FormControl('');
+    this.identifier = new FormControl('', [Validators.required]);
+    this.telephoneNumber = new FormControl('', [Validators.pattern('^[0-9]+$')]);
+
+    return this.fb.group({
+      customerId: this.customerId,
+      name: this.name,
+      address: this.address,
+      identifier: this.identifier,
+      telephoneNumber: this.telephoneNumber
+    });
   }
 
 }
