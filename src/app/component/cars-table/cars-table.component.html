@@ -1,11 +1,19 @@
-<div class="panel panel-default container-fluid">
-  <div class="panel-heading row">
-    <div class="pull-left">{{'Samochody&nbsp;' + _customer.name}}</div>
-    <div class="pull-right">
-      <input type="text" class="form-control" [(ngModel)]="carFilterText" placeholder="Szukaj"/>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="form-inline">
+      <label *ngIf="_customer">{{'Samochody ' + _customer.name}}</label>
+      <label *ngIf="!_customer">Wszystkie samochody</label>
+      <div class="input-group">
+        <input type="text" class="form-control" [(ngModel)]="carFilterText" placeholder="Szukaj"/>
+        <span class="input-group-btn">
+        <button class="btn btn-default" (click)="showCarForm($event, modal)" [disabled]="!_customer">
+          Nowy samochód
+        </button>
+      </span>
+      </div>
     </div>
   </div>
-  <div class="table-responsive row">
+  <div class="table-responsive">
     <table class="table table-hover table-bordered">
       <thead>
       <tr>
@@ -13,11 +21,7 @@
         <th>Silnik</th>
         <th>VIN</th>
         <th>Nr rejestracyjny</th>
-        <th>
-          <button class="btn btn-default btn-table" (click)="showCarForm($event, modal)">
-            Nowy samochód
-          </button>
-        </th>
+        <th></th>
         <th></th>
       </tr>
       </thead>

@@ -15,6 +15,16 @@ export class CustomerService {
   constructor(private http: Http) {
   }
 
+  getCustomer(customerId: number): Observable<Customer> {
+    return this.http
+      .get(this.CUSTOMERS_API_PREFIX + '/' + customerId)
+      .map(res => {
+        console.log(res.json());
+        return res.json();
+      })
+      .catch(err => Observable.throw(err));
+  }
+
   getCustomers(): Observable<Customer[]> {
     return this.http
       .get(this.CUSTOMERS_API_PREFIX)
@@ -25,7 +35,10 @@ export class CustomerService {
   getCarsForCustomer(customerId: number): Observable<Car[]> {
     return this.http
       .get(this.CUSTOMERS_API_PREFIX + '/' + customerId + '/cars')
-      .map(res => res.json()._embedded.cars)
+      .map(res => res.json()._embedded.cars.map(c => {
+        c['customer'] = c._links.customer.href;
+        return c;
+      }))
       .catch(err => Observable.throw(err));
   }
 

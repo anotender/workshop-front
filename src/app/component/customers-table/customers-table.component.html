@@ -1,11 +1,16 @@
-<div class="panel panel-default container-fluid">
-  <div class="panel-heading row">
-    <div class="pull-left">Klienci</div>
-    <div class="pull-right">
-      <input type="text" class="form-control" [(ngModel)]="customerFilterText" placeholder="Szukaj"/>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="form-inline">
+      <label>Klienci</label>
+      <div class="input-group">
+        <input type="text" class="form-control" [(ngModel)]="customerFilterText" placeholder="Szukaj"/>
+        <span class="input-group-btn">
+        <button class="btn btn-default" (click)="showCustomerForm($event, modal)">Nowy klient</button>
+      </span>
+      </div>
     </div>
   </div>
-  <div class="table-responsive row">
+  <div class="table-responsive">
     <table class="table table-hover table-bordered">
       <thead>
       <tr>
@@ -13,9 +18,7 @@
         <th>Adres</th>
         <th>NIP/PESEL</th>
         <th>Numer telefonu</th>
-        <th>
-          <button class="btn btn-default btn-table" (click)="showCustomerForm($event, modal)">Nowy klient</button>
-        </th>
+        <th></th>
         <th></th>
       </tr>
       </thead>

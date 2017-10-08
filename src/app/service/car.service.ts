@@ -4,6 +4,7 @@ import {Observable} from "rxjs/Rx";
 import {Car} from "../model/car";
 import {Repair} from "../model/repair";
 import {AppConfig} from "../configuration/app.config";
+import {Customer} from "../model/customer";
 
 @Injectable()
 export class CarService {
@@ -15,6 +16,16 @@ export class CarService {
   constructor(private http: Http) {
   }
 
+  getCars(): Observable<Car[]> {
+    return this.http
+      .get(this.CARS_API_PREFIX)
+      .map(res => res.json()._embedded.cars.map(c => {
+        c['customer'] = c._links.customer.href;
+        return c;
+      }))
+      .catch(err => Observable.throw(err));
+  }
+
   getRepairsForCar(carId: number): Observable<Repair[]> {
     return this.http
       .get(this.CARS_API_PREFIX + '/' + carId + '/repairs')
@@ -22,8 +33,17 @@ export class CarService {
       .catch(err => Observable.throw(err));
   }
 
-  save(car: Car, customerId: number): Observable<any> {
-    car.customer = AppConfig.API_PREFIX + '/customers/' + customerId;
+  getCustomerForCar(carId: number): Observable<Customer> {
+    return this.http
+      .get(this.CARS_API_PREFIX + '/' + carId + '/customer')
+      .map(res => {
+        console.log(res.json());
+        return res.json();
+      })
+      .catch(err => Observable.throw(err));
+  }
+
+  save(car: Car): Observable<any> {
     let body = JSON.stringify(car);
     return this.http
       .post(this.CARS_API_PREFIX, body, this.OPTIONS)
@@ -31,11 +51,10 @@ export class CarService {
       .catch(err => Observable.throw(err));
   }
 
-  edit(carId: number, car: Car, customerId: number): Observable<any> {
-    car.customer = AppConfig.API_PREFIX + '/customers/' + customerId;
+  edit(car: Car): Observable<any> {
     let body = JSON.stringify(car);
     return this.http
-      .patch(this.CARS_API_PREFIX + '/' + carId, body, this.OPTIONS)
+      .patch(this.CARS_API_PREFIX + '/' + car.id, body, this.OPTIONS)
       .map(res => res.json())
       .catch(err => Observable.throw(err));
   }

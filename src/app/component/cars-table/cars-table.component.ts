@@ -5,6 +5,7 @@ import {Customer} from "../../model/customer";
 import {CustomerService} from "../../service/customer.service";
 import {NgProgressService} from "ngx-progressbar";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {AppConfig} from "../../configuration/app.config";
 
 @Component({
   selector: 'app-cars-table',
@@ -41,12 +42,22 @@ export class CarsTableComponent implements OnInit {
   set customer(customer: Customer) {
     this.progressService.start();
     this._customer = customer;
-    this.customerService
-      .getCarsForCustomer(customer.id)
-      .subscribe(cars => {
-        this.cars = cars;
-        this.progressService.done();
-      });
+    if (customer) {
+      this.customerService
+        .getCarsForCustomer(customer.id)
+        .subscribe(cars => {
+          this.cars = cars;
+          this.progressService.done();
+        });
+    } else {
+      this.carService
+        .getCars()
+        .subscribe(cars => {
+          this.cars = cars;
+          this.progressService.done();
+        })
+    }
+
   }
 
   selectCar(car: Car): void {
@@ -79,8 +90,18 @@ export class CarsTableComponent implements OnInit {
     car.registrationNumber = value.registrationNumber;
 
     if (value.carId) {
-      this.editCar(car);
+      this.progressService.start();
+      this.carService
+        .getCustomerForCar(value.carId)
+        .subscribe(customer => {
+          car.customer = AppConfig.API_PREFIX + '/customer/' + customer.id;
+          this.editCar(car);
+        }, err => {
+          console.log(err);
+          this.progressService.done();
+        });
     } else {
+      car.customer = AppConfig.API_PREFIX + '/customer/' + this._customer.id;
       this.saveCar(car);
     }
 
@@ -90,29 +111,24 @@ export class CarsTableComponent implements OnInit {
   saveCar(car: Car): void {
     this.progressService.start();
     this.carService
-      .save(car, this._customer.id)
+      .save(car)
       .subscribe(res => {
-        car.id = res.id;
-        this.cars.push(car);
-        this.progressService.done();
-      }, err => {
-        console.log(err);
-        this.progressService.done();
-      });
+          car.id = res.id;
+          this.cars.push(car);
+        }, err => console.log(err),
+        () => this.progressService.done()
+      );
   }
 
   editCar(car: Car): void {
-    this.progressService.start();
     this.carService
-      .edit(car.id, car, this._customer.id)
+      .edit(car)
       .subscribe(res => {
-        let index: number = this.cars.findIndex(c => c.id === car.id);
-        this.cars[index] = car;
-        this.progressService.done();
-      }, err => {
-        console.log(err);
-        this.progressService.done();
-      });
+          let index: number = this.cars.findIndex(c => c.id === car.id);
+          this.cars[index] = car;
+        }, err => console.log(err),
+        () => this.progressService.done()
+      );
   }
 
   deleteCar(car: Car): void {
