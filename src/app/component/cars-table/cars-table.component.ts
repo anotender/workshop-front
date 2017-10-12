@@ -147,6 +147,10 @@ export class CarsTableComponent implements OnInit {
       });
   }
 
+  getTitle(): string {
+    return this._customer ? 'Samochody ' + this._customer.name : 'Wszystkie samochody';
+  }
+
   private initCarForm(): FormGroup {
     this.carId = new FormControl('');
     this.name = new FormControl('', [Validators.required]);

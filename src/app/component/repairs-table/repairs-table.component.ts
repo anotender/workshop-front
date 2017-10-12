@@ -20,6 +20,7 @@ export class RepairsTableComponent implements OnInit {
   description: FormControl;
   workCost: FormControl;
   partsCost: FormControl;
+  totalCost: FormControl;
   date: FormControl;
   carMileage: FormControl;
   comments: FormControl;
@@ -53,6 +54,7 @@ export class RepairsTableComponent implements OnInit {
       this.description.setValue(repair.description);
       this.workCost.setValue(repair.workCost);
       this.partsCost.setValue(repair.partsCost);
+      this.totalCost.setValue(repair.partsCost + repair.workCost);
       this.date.setValue(repair.date);
       this.carMileage.setValue(repair.carMileage);
       this.comments.setValue(repair.comments);
@@ -125,11 +127,17 @@ export class RepairsTableComponent implements OnInit {
       });
   }
 
+  costChange(): void {
+    this.totalCost.setValue(this.workCost.value + this.partsCost.value);
+  }
+
   private initRepairForm(): FormGroup {
     this.repairId = new FormControl('');
     this.description = new FormControl('', [Validators.required]);
-    this.workCost = new FormControl('');
-    this.partsCost = new FormControl('');
+    this.workCost = new FormControl(0);
+    this.partsCost = new FormControl(0);
+    this.totalCost = new FormControl(0);
+    this.totalCost.disable(true);
     this.date = new FormControl('', [Validators.required]);
     this.carMileage = new FormControl('');
     this.comments = new FormControl('');
@@ -139,6 +147,7 @@ export class RepairsTableComponent implements OnInit {
       description: this.description,
       workCost: this.workCost,
       partsCost: this.partsCost,
+      totalCost: this.totalCost,
       date: this.date,
       carMileage: this.carMileage,
       comments: this.comments

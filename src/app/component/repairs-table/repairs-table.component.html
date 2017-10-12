@@ -1,5 +1,12 @@
 <div class="panel panel-default">
-  <div class="panel-heading">{{'Naprawy ' + _car.name}}</div>
+  <div class="panel-heading">
+    <div class="form-inline">
+      <label>{{'Naprawy ' + _car.name}}</label>
+      <button class="btn btn-default" (click)="showRepairForm(modal)">
+        Nowa naprawa
+      </button>
+    </div>
+  </div>
   <div class="table-responsive">
     <table class="table table-hover table-bordered">
       <thead>
@@ -11,11 +18,7 @@
         <th>Data</th>
         <th>Przebieg</th>
         <th>Uwagi</th>
-        <th>
-          <button class="btn btn-default btn-table" (click)="showRepairForm(modal)">
-            Nowa naprawa
-          </button>
-        </th>
+        <th></th>
         <th></th>
       </tr>
       </thead>
@@ -61,17 +64,22 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div class="form-group" [ngClass]="{'has-error': workCost.invalid && (workCost.dirty || workCost.touched)}">
             <input type="number" name="workCost" placeholder="Robocizna" class="form-control"
-                   formControlName="workCost">
+                   formControlName="workCost" (change)="costChange()">
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div class="form-group"
                [ngClass]="{'has-error': partsCost.invalid && (partsCost.dirty || partsCost.touched)}">
             <input type="number" name="partsCost" placeholder="Cena części" class="form-control"
-                   formControlName="partsCost">
+                   formControlName="partsCost" (change)="costChange()">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <input type="number" name="totalCost" placeholder="Razem" class="form-control" formControlName="totalCost">
           </div>
         </div>
       </div>

@@ -1,15 +1,14 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="form-inline">
-      <label *ngIf="_customer">{{'Samochody ' + _customer.name}}</label>
-      <label *ngIf="!_customer">Wszystkie samochody</label>
+      <label>{{getTitle()}}</label>
       <div class="input-group">
         <input type="text" class="form-control" [(ngModel)]="carFilterText" placeholder="Szukaj"/>
         <span class="input-group-btn">
-        <button class="btn btn-default" (click)="showCarForm($event, modal)" [disabled]="!_customer">
-          Nowy samochód
-        </button>
-      </span>
+          <button class="btn btn-default" (click)="showCarForm($event, modal)" [disabled]="!_customer">
+            Nowy samochód
+          </button>
+        </span>
       </div>
     </div>
   </div>
