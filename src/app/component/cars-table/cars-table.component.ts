@@ -113,22 +113,26 @@ export class CarsTableComponent implements OnInit {
     this.carService
       .save(car)
       .subscribe(res => {
-          car.id = res.id;
-          this.cars.push(car);
-        }, err => console.log(err),
-        () => this.progressService.done()
-      );
+        car.id = res.id;
+        this.cars.push(car);
+        this.progressService.done();
+      }, err => {
+        console.log(err);
+        this.progressService.done();
+      });
   }
 
   editCar(car: Car): void {
     this.carService
       .edit(car)
       .subscribe(res => {
-          let index: number = this.cars.findIndex(c => c.id === car.id);
-          this.cars[index] = car;
-        }, err => console.log(err),
-        () => this.progressService.done()
-      );
+        let index: number = this.cars.findIndex(c => c.id === car.id);
+        this.cars[index] = car;
+        this.progressService.done();
+      }, err => {
+        console.log(err);
+        this.progressService.done();
+      });
   }
 
   deleteCar(car: Car): void {
@@ -144,7 +148,14 @@ export class CarsTableComponent implements OnInit {
         }
 
         this.progressService.done();
+      }, err => {
+        console.log(err);
+        this.progressService.done();
       });
+  }
+
+  registrationNumberFocusOut(): void {
+    this.registrationNumber.setValue(this.registrationNumber.value.replace(/\s/g, '').toUpperCase());
   }
 
   getTitle(): string {
@@ -152,11 +163,11 @@ export class CarsTableComponent implements OnInit {
   }
 
   private initCarForm(): FormGroup {
-    this.carId = new FormControl('');
-    this.name = new FormControl('', [Validators.required]);
-    this.engine = new FormControl('', [Validators.required]);
-    this.vin = new FormControl('');
-    this.registrationNumber = new FormControl('', [Validators.required]);
+    this.carId = new FormControl();
+    this.name = new FormControl(null, [Validators.required]);
+    this.engine = new FormControl(null, [Validators.required]);
+    this.vin = new FormControl();
+    this.registrationNumber = new FormControl();
 
     return this.fb.group({
       carId: this.carId,

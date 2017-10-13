@@ -71,10 +71,7 @@
       <div class="form-group"
            [ngClass]="{'has-error': registrationNumber.invalid && (registrationNumber.dirty || registrationNumber.touched)}">
         <input type="text" name="registrationNumber" placeholder="Numer rejestracyjny" class="form-control"
-               formControlName="registrationNumber" required="required"/>
-        <div *ngIf="registrationNumber.invalid && (registrationNumber.dirty || registrationNumber.touched)">
-          <span class="help-block" *ngIf="registrationNumber.errors.required">To pole jest wymagane</span>
-        </div>
+               formControlName="registrationNumber" (focusout)="registrationNumberFocusOut()"/>
       </div>
     </bs-modal-body>
     <bs-modal-footer>

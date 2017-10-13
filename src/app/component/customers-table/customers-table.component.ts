@@ -130,11 +130,11 @@ export class CustomersTableComponent implements OnInit {
   }
 
   private initCustomerForm(): FormGroup {
-    this.customerId = new FormControl('');
-    this.name = new FormControl('', [Validators.required]);
-    this.address = new FormControl('');
-    this.identifier = new FormControl('', [Validators.required]);
-    this.telephoneNumber = new FormControl('', [Validators.pattern('^[0-9]+$')]);
+    this.customerId = new FormControl();
+    this.name = new FormControl(null, [Validators.required]);
+    this.address = new FormControl();
+    this.identifier = new FormControl();
+    this.telephoneNumber = new FormControl(null, [Validators.pattern('^[0-9]+$')]);
 
     return this.fb.group({
       customerId: this.customerId,
