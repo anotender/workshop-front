@@ -51,27 +51,30 @@
   </bs-modal-header>
   <form (ngSubmit)="submitCarForm(modal, carForm.value)" [formGroup]="carForm">
     <bs-modal-body>
-      <div class="form-group" [ngClass]="{'has-error': name.invalid && (name.dirty || name.touched)}">
-        <input type="text" name="name" placeholder="Nazwa" class="form-control" required="required"
+      <div class="form-group" [ngClass]="{'has-error': name.invalid}">
+        <label for="name">Nazwa</label>
+        <input type="text" id="name" name="name" placeholder="Nazwa" class="form-control" required="required"
                formControlName="name"/>
-        <div *ngIf="name.invalid && (name.dirty || name.touched)">
+        <div *ngIf="name.invalid">
           <span class="help-block" *ngIf="name.errors.required">To pole jest wymagane</span>
         </div>
       </div>
-      <div class="form-group" [ngClass]="{'has-error': engine.invalid && (engine.dirty || engine.touched)}">
-        <input type="text" name="engine" placeholder="Silnik" class="form-control" formControlName="engine"
+      <div class="form-group" [ngClass]="{'has-error': engine.invalid}">
+        <label for="engine">Silnik</label>
+        <input type="text" id="engine" name="engine" placeholder="Silnik" class="form-control" formControlName="engine"
                required="required">
-        <div *ngIf="engine.invalid && (engine.dirty || engine.touched)">
+        <div *ngIf="engine.invalid">
           <span class="help-block" *ngIf="engine.errors.required">To pole jest wymagane</span>
         </div>
       </div>
-      <div class="form-group" [ngClass]="{'has-error': vin.invalid && (vin.dirty || vin.touched)}">
-        <input type="text" name="vin" placeholder="VIN" class="form-control" formControlName="vin"/>
+      <div class="form-group">
+        <label for="vin">VIN</label>
+        <input type="text" id="vin" name="vin" placeholder="VIN" class="form-control" formControlName="vin"/>
       </div>
-      <div class="form-group"
-           [ngClass]="{'has-error': registrationNumber.invalid && (registrationNumber.dirty || registrationNumber.touched)}">
-        <input type="text" name="registrationNumber" placeholder="Numer rejestracyjny" class="form-control"
-               formControlName="registrationNumber" (focusout)="registrationNumberFocusOut()"/>
+      <div class="form-group">
+        <label for="registrationNumber">Numer rejestracyjny</label>
+        <input type="text" id="registrationNumber" name="registrationNumber" placeholder="Numer rejestracyjny"
+               class="form-control" formControlName="registrationNumber" (focusout)="registrationNumberFocusOut()"/>
       </div>
     </bs-modal-body>
     <bs-modal-footer>

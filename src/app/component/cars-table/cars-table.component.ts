@@ -6,6 +6,7 @@ import {CustomerService} from "../../service/customer.service";
 import {NgProgressService} from "ngx-progressbar";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AppConfig} from "../../configuration/app.config";
+import {StringUtils} from "../../utils/string.utils";
 
 @Component({
   selector: 'app-cars-table',
@@ -61,8 +62,6 @@ export class CarsTableComponent implements OnInit {
   }
 
   selectCar(car: Car): void {
-    if (car === this.selectedCar) return;
-
     this.selectedCar = car;
     this.carSelected.emit(car);
   }
@@ -82,12 +81,7 @@ export class CarsTableComponent implements OnInit {
   }
 
   submitCarForm(modal, value): void {
-    let car: Car = new Car();
-    car.id = value.carId;
-    car.name = value.name;
-    car.engine = value.engine;
-    car.vin = value.vin;
-    car.registrationNumber = value.registrationNumber;
+    let car: Car = this.mapFormValueToCar(value);
 
     if (value.carId) {
       this.progressService.start();
@@ -160,6 +154,18 @@ export class CarsTableComponent implements OnInit {
 
   getTitle(): string {
     return this._customer ? 'Samochody ' + this._customer.name : 'Wszystkie samochody';
+  }
+
+  private mapFormValueToCar(value: any): Car {
+    let car: Car = new Car();
+
+    car.id = value.carId;
+    car.name = StringUtils.getStringOrNull(value.name);
+    car.engine = StringUtils.getStringOrNull(value.engine);
+    car.vin = StringUtils.getStringOrNull(value.vin);
+    car.registrationNumber = StringUtils.getStringOrNull(value.registrationNumber);
+
+    return car;
   }
 
   private initCarForm(): FormGroup {

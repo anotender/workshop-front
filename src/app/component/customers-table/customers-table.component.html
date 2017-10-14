@@ -51,22 +51,28 @@
   </bs-modal-header>
   <form (ngSubmit)="submitCustomerForm(modal, customerForm.value)" [formGroup]="customerForm">
     <bs-modal-body>
-      <div class="form-group" [ngClass]="{'has-error': name.invalid && (name.dirty || name.touched)}">
-        <input type="text" name="name" placeholder="Imię i nazwisko lub nazwa firmy" class="form-control"
+      <div class="form-group" [ngClass]="{'has-error': name.invalid}">
+        <label for="name">Nazwa</label>
+        <input type="text" id="name" name="name" placeholder="Imię i nazwisko lub nazwa firmy" class="form-control"
                required="required" formControlName="name"/>
-        <div *ngIf="name.invalid && (name.dirty || name.touched)">
+        <div *ngIf="name.invalid">
           <span class="help-block" *ngIf="name.errors.required">To pole jest wymagane</span>
         </div>
       </div>
       <div class="form-group">
-        <input type="text" name="address" placeholder="Adres" class="form-control" formControlName="address">
+        <label for="address">Adres</label>
+        <input type="text" id="address" name="address" placeholder="Adres" class="form-control"
+               formControlName="address">
       </div>
       <div class="form-group">
-        <input type="text" name="identifier" placeholder="NIP/PESEL" class="form-control" formControlName="identifier"/>
+        <label for="identifier">NIP/PESEL</label>
+        <input type="text" id="identifier" name="identifier" placeholder="NIP/PESEL" class="form-control"
+               formControlName="identifier"/>
       </div>
       <div class="form-group"
            [ngClass]="{'has-error': telephoneNumber.invalid && (telephoneNumber.dirty || telephoneNumber.touched)}">
-        <input type="text" name="telephoneNumber" placeholder="Numer telefonu" class="form-control"
+        <label for="telephoneNumber">Numer telefonu</label>
+        <input type="text" id="telephoneNumber" name="telephoneNumber" placeholder="Numer telefonu" class="form-control"
                formControlName="telephoneNumber"/>
         <div *ngIf="telephoneNumber.invalid && (telephoneNumber.dirty || telephoneNumber.touched)">
           <span class="help-block" *ngIf="telephoneNumber.errors.pattern">Wpisz poprawny numer telefonu</span>

@@ -3,6 +3,7 @@ import {Customer} from "../../model/customer";
 import {CustomerService} from "../../service/customer.service";
 import {NgProgressService} from "ngx-progressbar";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {StringUtils} from "../../utils/string.utils";
 
 @Component({
   selector: 'app-customers-table',
@@ -31,9 +32,7 @@ export class CustomersTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.progressService.start();
-
     this.customerForm = this.initCustomerForm();
-
     this.customerService
       .getCustomers()
       .subscribe(customers => {
@@ -43,8 +42,6 @@ export class CustomersTableComponent implements OnInit {
   }
 
   selectCustomer(customer: Customer): void {
-    if (customer === this.selectedCustomer) return;
-
     this.selectedCustomer = customer;
     this.customerSelected.emit(customer);
   }
@@ -64,12 +61,7 @@ export class CustomersTableComponent implements OnInit {
   }
 
   submitCustomerForm(modal, value): void {
-    let customer: Customer = new Customer();
-    customer.id = value.customerId;
-    customer.name = value.name;
-    customer.address = value.address;
-    customer.identifier = value.identifier;
-    customer.telephoneNumber = value.telephoneNumber;
+    let customer: Customer = this.mapFormValueToCustomer(value);
 
     if (value.customerId) {
       this.editCustomer(customer);
@@ -127,6 +119,18 @@ export class CustomersTableComponent implements OnInit {
         console.log(err);
         this.progressService.done();
       });
+  }
+
+  private mapFormValueToCustomer(value: any): Customer {
+    let customer: Customer = new Customer();
+
+    customer.id = value.customerId;
+    customer.name = StringUtils.getStringOrNull(value.name);
+    customer.address = StringUtils.getStringOrNull(value.address);
+    customer.identifier = StringUtils.getStringOrNull(value.identifier);
+    customer.telephoneNumber = StringUtils.getStringOrNull(value.telephoneNumber);
+
+    return customer;
   }
 
   private initCustomerForm(): FormGroup {

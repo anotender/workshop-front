@@ -4,7 +4,7 @@ import {Repair} from "../../model/repair";
 import {RepairService} from "../../service/repair.service";
 import {CarService} from "../../service/car.service";
 import {NgProgressService} from "ngx-progressbar";
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-repairs-table',
@@ -64,14 +64,7 @@ export class RepairsTableComponent implements OnInit {
   }
 
   submitRepairForm(modal, value): void {
-    let repair: Repair = new Repair();
-    repair.id = value.repairId;
-    repair.description = value.description;
-    repair.workCost = value.workCost;
-    repair.partsCost = value.partsCost;
-    repair.date = value.date;
-    repair.carMileage = value.carMileage;
-    repair.comments = value.comments;
+    let repair: Repair = this.mapFormValueToRepair(value);
 
     if (value.repairId) {
       this.editRepair(repair);
@@ -129,6 +122,20 @@ export class RepairsTableComponent implements OnInit {
 
   costChange(): void {
     this.totalCost.setValue(this.workCost.value + this.partsCost.value);
+  }
+
+  private mapFormValueToRepair(value: any): Repair {
+    let repair: Repair = new Repair();
+
+    repair.id = value.repairId;
+    repair.description = value.description;
+    repair.workCost = value.workCost;
+    repair.partsCost = value.partsCost;
+    repair.date = value.date;
+    repair.carMileage = value.carMileage;
+    repair.comments = value.comments;
+
+    return repair;
   }
 
   private initRepairForm(): FormGroup {

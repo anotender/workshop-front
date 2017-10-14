@@ -20,4 +20,8 @@ export class StringUtils {
     return this.contains(str.toLowerCase(), substr.toLowerCase());
   }
 
+  static getStringOrNull(s: string): string {
+    return this.isNotBlank(s) ? s : null;
+  }
+
 }
