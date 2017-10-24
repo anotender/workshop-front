@@ -5,6 +5,7 @@ import {RepairService} from "../../service/repair.service";
 import {CarService} from "../../service/car.service";
 import {NgProgressService} from "ngx-progressbar";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {ErrorService} from "../../service/error.service";
 
 @Component({
   selector: 'app-repairs-table',
@@ -28,6 +29,7 @@ export class RepairsTableComponent implements OnInit {
 
   constructor(private carService: CarService,
               private repairService: RepairService,
+              private errorService: ErrorService,
               private progressService: NgProgressService,
               private fb: FormBuilder) {
   }
@@ -45,6 +47,8 @@ export class RepairsTableComponent implements OnInit {
       .subscribe(repairs => {
         this.repairs = repairs;
         this.progressService.done();
+      }, err => {
+        this.errorService.handleError(err);
       });
   }
 
@@ -84,8 +88,7 @@ export class RepairsTableComponent implements OnInit {
         this.repairs.push(repair);
         this.progressService.done();
       }, err => {
-        console.log(err);
-        this.progressService.done();
+        this.errorService.handleError(err);
       });
   }
 
@@ -98,8 +101,7 @@ export class RepairsTableComponent implements OnInit {
         this.repairs[index] = repair;
         this.progressService.done();
       }, err => {
-        console.log(err);
-        this.progressService.done();
+        this.errorService.handleError(err);
       });
   }
 
@@ -115,8 +117,7 @@ export class RepairsTableComponent implements OnInit {
 
         this.progressService.done();
       }, err => {
-        console.log(err);
-        this.progressService.done();
+        this.errorService.handleError(err);
       });
   }
 

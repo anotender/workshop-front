@@ -14,6 +14,8 @@ import {NgProgressModule} from "ngx-progressbar";
 import {CustomerFilterPipe} from "./pipe/customer-filter.pipe";
 import {CarFilterPipe} from "./pipe/car-filter.pipe";
 import {BsModalModule} from "ng2-bs3-modal";
+import {ErrorService} from "./service/error.service";
+import {AuthService} from "./service/auth.service";
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import {BsModalModule} from "ng2-bs3-modal";
   providers: [
     CustomerService,
     CarService,
-    RepairService
+    RepairService,
+    ErrorService,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

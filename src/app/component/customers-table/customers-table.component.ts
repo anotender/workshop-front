@@ -4,6 +4,7 @@ import {CustomerService} from "../../service/customer.service";
 import {NgProgressService} from "ngx-progressbar";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {StringUtils} from "../../utils/string.utils";
+import {ErrorService} from "../../service/error.service";
 
 @Component({
   selector: 'app-customers-table',
@@ -26,6 +27,7 @@ export class CustomersTableComponent implements OnInit {
   customerForm: FormGroup;
 
   constructor(private customerService: CustomerService,
+              private errorService: ErrorService,
               private progressService: NgProgressService,
               private fb: FormBuilder) {
   }
@@ -38,6 +40,8 @@ export class CustomersTableComponent implements OnInit {
       .subscribe(customers => {
         this.customers = customers;
         this.progressService.done();
+      }, err => {
+        this.errorService.handleError(err);
       });
   }
 
@@ -81,8 +85,7 @@ export class CustomersTableComponent implements OnInit {
         this.customers.push(customer);
         this.progressService.done();
       }, err => {
-        console.log(err);
-        this.progressService.done();
+        this.errorService.handleError(err);
       });
   }
 
@@ -95,8 +98,7 @@ export class CustomersTableComponent implements OnInit {
         this.customers[index] = customer;
         this.progressService.done();
       }, err => {
-        console.log(err);
-        this.progressService.done();
+        this.errorService.handleError(err);
       });
   }
 
@@ -116,8 +118,7 @@ export class CustomersTableComponent implements OnInit {
 
         this.progressService.done();
       }, err => {
-        console.log(err);
-        this.progressService.done();
+        this.errorService.handleError(err);
       });
   }
 

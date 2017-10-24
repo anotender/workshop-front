@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {Customer} from "./model/customer";
 import {Car} from "./model/car";
+import {AuthService} from "./service/auth.service";
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,16 @@ export class AppComponent {
   customerMode: boolean = false;
   carMode: boolean = true;
 
-  constructor() {
+  constructor(private authService: AuthService) {
+  }
+
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  login(password: string): void {
+    this.clearSelections();
+    this.authService.login('username', password);
   }
 
   handleCustomerSelected(customer: Customer): void {

@@ -3,22 +3,21 @@ import {Headers, Http, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs/Rx";
 import {Repair} from "../model/repair";
 import {AppConfig} from "../configuration/app.config";
+import {AuthService} from "./auth.service";
 
 @Injectable()
 export class RepairService {
 
   private REPAIRS_API_PREFIX = AppConfig.API_PREFIX + '/repairs';
-  private HEADERS = new Headers({'Content-Type': 'application/json'});
-  private OPTIONS = new RequestOptions({headers: this.HEADERS});
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private authService: AuthService) {
   }
 
   save(repair: Repair, carId: number): Observable<any> {
     repair.car = AppConfig.API_PREFIX + '/cars/' + carId;
     let body = JSON.stringify(repair);
     return this.http
-      .post(this.REPAIRS_API_PREFIX, body, this.OPTIONS)
+      .post(this.REPAIRS_API_PREFIX, body, this.authService.getRequestOptions())
       .map(res => res.json())
       .catch(err => Observable.throw(err));
   }
@@ -27,14 +26,14 @@ export class RepairService {
     repair.car = AppConfig.API_PREFIX + '/cars/' + carId;
     let body = JSON.stringify(repair);
     return this.http
-      .patch(this.REPAIRS_API_PREFIX + '/' + repairId, body, this.OPTIONS)
+      .patch(this.REPAIRS_API_PREFIX + '/' + repairId, body, this.authService.getRequestOptions())
       .map(res => res.json())
       .catch(err => Observable.throw(err));
   }
 
   remove(repairId: number): Observable<any> {
     return this.http
-      .delete(this.REPAIRS_API_PREFIX + '/' + repairId)
+      .delete(this.REPAIRS_API_PREFIX + '/' + repairId, this.authService.getRequestOptions())
       .map(res => res.json())
       .catch(err => Observable.throw(err));
   }

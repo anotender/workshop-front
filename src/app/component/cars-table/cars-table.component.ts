@@ -7,6 +7,7 @@ import {NgProgressService} from "ngx-progressbar";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AppConfig} from "../../configuration/app.config";
 import {StringUtils} from "../../utils/string.utils";
+import {ErrorService} from "../../service/error.service";
 
 @Component({
   selector: 'app-cars-table',
@@ -31,6 +32,7 @@ export class CarsTableComponent implements OnInit {
 
   constructor(private customerService: CustomerService,
               private carService: CarService,
+              private errorService: ErrorService,
               private progressService: NgProgressService,
               private fb: FormBuilder) {
   }
@@ -49,6 +51,8 @@ export class CarsTableComponent implements OnInit {
         .subscribe(cars => {
           this.cars = cars;
           this.progressService.done();
+        }, err => {
+          this.errorService.handleError(err);
         });
     } else {
       this.carService
@@ -56,7 +60,9 @@ export class CarsTableComponent implements OnInit {
         .subscribe(cars => {
           this.cars = cars;
           this.progressService.done();
-        })
+        }, err => {
+          this.errorService.handleError(err);
+        });
     }
 
   }
@@ -91,8 +97,7 @@ export class CarsTableComponent implements OnInit {
           car.customer = AppConfig.API_PREFIX + '/customer/' + customer.id;
           this.editCar(car);
         }, err => {
-          console.log(err);
-          this.progressService.done();
+          this.errorService.handleError(err);
         });
     } else {
       car.customer = AppConfig.API_PREFIX + '/customer/' + this._customer.id;
@@ -111,8 +116,7 @@ export class CarsTableComponent implements OnInit {
         this.cars.push(car);
         this.progressService.done();
       }, err => {
-        console.log(err);
-        this.progressService.done();
+        this.errorService.handleError(err);
       });
   }
 
@@ -124,8 +128,7 @@ export class CarsTableComponent implements OnInit {
         this.cars[index] = car;
         this.progressService.done();
       }, err => {
-        console.log(err);
-        this.progressService.done();
+        this.errorService.handleError(err);
       });
   }
 
@@ -143,8 +146,7 @@ export class CarsTableComponent implements OnInit {
 
         this.progressService.done();
       }, err => {
-        console.log(err);
-        this.progressService.done();
+        this.errorService.handleError(err);
       });
   }
 

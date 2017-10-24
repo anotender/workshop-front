@@ -1,29 +1,42 @@
 <ng-progress [showSpinner]="false" [thick]="true"></ng-progress>
 <main class="container-fluid" style="margin-top: 10px">
-  <div [ngClass]="carMode ? getCarTableClass() : getCustomerTableClass()">
-    <div class="row" style="margin: 10px;">
-      <div class="col-md-6">
-        <button type="button" class="btn btn-table"
-                [ngClass]="{'btn-default': !customerMode, 'btn-primary': customerMode}"
-                (click)="selectCustomerMode()">
-          Klienci
-        </button>
+  <div *ngIf="isAuthenticated()">
+    <div [ngClass]="carMode ? getCarTableClass() : getCustomerTableClass()">
+      <div class="row" style="margin: 10px;">
+        <div class="col-md-6">
+          <button type="button" class="btn btn-table"
+                  [ngClass]="{'btn-default': !customerMode, 'btn-primary': customerMode}"
+                  (click)="selectCustomerMode()">
+            Klienci
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button type="button" class="btn btn-table" [ngClass]="{'btn-default': !carMode, 'btn-primary': carMode}"
+                  (click)="selectCarMode()">
+            Samochody
+          </button>
+        </div>
       </div>
-      <div class="col-md-6">
-        <button type="button" class="btn btn-table" [ngClass]="{'btn-default': !carMode, 'btn-primary': carMode}"
-                (click)="selectCarMode()">
-          Samochody
-        </button>
-      </div>
+      <app-customers-table *ngIf="customerMode"
+                           (customerSelected)="handleCustomerSelected($event)"></app-customers-table>
+      <app-cars-table *ngIf="carMode" [customer]="selectedCustomer"
+                      (carSelected)="handleCarSelected($event)"></app-cars-table>
     </div>
-    <app-customers-table *ngIf="customerMode" (customerSelected)="handleCustomerSelected($event)"></app-customers-table>
-    <app-cars-table *ngIf="carMode" [customer]="selectedCustomer"
-                    (carSelected)="handleCarSelected($event)"></app-cars-table>
+    <div *ngIf="selectedCustomer !== null" [ngClass]="getCarTableClass()">
+      <app-cars-table [customer]="selectedCustomer" (carSelected)="handleCarSelected($event)"></app-cars-table>
+    </div>
+    <div *ngIf="selectedCar !== null" class="col-md-6">
+      <app-repairs-table [car]="selectedCar"></app-repairs-table>
+    </div>
   </div>
-  <div *ngIf="selectedCustomer !== null" [ngClass]="getCarTableClass()">
-    <app-cars-table [customer]="selectedCustomer" (carSelected)="handleCarSelected($event)"></app-cars-table>
-  </div>
-  <div *ngIf="selectedCar !== null" class="col-md-6">
-    <app-repairs-table [car]="selectedCar"></app-repairs-table>
+  <div *ngIf="!isAuthenticated()">
+    <form class="form-inline" (ngSubmit)="login(pwd.value)">
+      <div class="input-group">
+        <input #pwd type="password" placeholder="Hasło" class="form-control">
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-primary">Zaloguj</button>
+        </span>
+      </div>
+    </form>
   </div>
 </main>
