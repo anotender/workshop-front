@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {Customer} from "./model/customer";
 import {Car} from "./model/car";
 import {AuthService} from "./service/auth.service";
+import {NgProgressService} from "ngx-progressbar";
 
 @Component({
   selector: 'app-root',
@@ -14,11 +15,15 @@ export class AppComponent {
   customerMode: boolean = false;
   carMode: boolean = true;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private progressService: NgProgressService) {
   }
 
   isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
+  }
+
+  isAuthenticating(): boolean {
+    return this.progressService.isStarted();
   }
 
   login(password: string): void {

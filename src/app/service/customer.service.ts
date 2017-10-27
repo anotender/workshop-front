@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Headers, Http, RequestOptions} from "@angular/http";
+import {Http} from "@angular/http";
 import {Observable} from "rxjs/Rx";
 import {Customer} from "../model/customer";
 import {Car} from "../model/car";
@@ -17,10 +17,7 @@ export class CustomerService {
   getCustomer(customerId: number): Observable<Customer> {
     return this.http
       .get(this.CUSTOMERS_API_PREFIX + '/' + customerId, this.authService.getRequestOptions())
-      .map(res => {
-        console.log(res.json());
-        return res.json();
-      })
+      .map(res => res.json())
       .catch(err => Observable.throw(err));
   }
 

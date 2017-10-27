@@ -16,6 +16,8 @@ import {CarFilterPipe} from "./pipe/car-filter.pipe";
 import {BsModalModule} from "ng2-bs3-modal";
 import {ErrorService} from "./service/error.service";
 import {AuthService} from "./service/auth.service";
+import {ToastrModule} from "ngx-toastr";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -32,7 +34,13 @@ import {AuthService} from "./service/auth.service";
     FormsModule,
     ReactiveFormsModule,
     NgProgressModule,
-    BsModalModule
+    BsModalModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 2000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true
+    })
   ],
   providers: [
     CustomerService,

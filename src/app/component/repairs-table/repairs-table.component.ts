@@ -6,6 +6,7 @@ import {CarService} from "../../service/car.service";
 import {NgProgressService} from "ngx-progressbar";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ErrorService} from "../../service/error.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-repairs-table',
@@ -31,6 +32,7 @@ export class RepairsTableComponent implements OnInit {
               private repairService: RepairService,
               private errorService: ErrorService,
               private progressService: NgProgressService,
+              private toastrService: ToastrService,
               private fb: FormBuilder) {
   }
 
@@ -87,6 +89,7 @@ export class RepairsTableComponent implements OnInit {
         repair.id = res.id;
         this.repairs.push(repair);
         this.progressService.done();
+        this.toastrService.success('Zapisano naprawę');
       }, err => {
         this.errorService.handleError(err);
       });
@@ -100,6 +103,7 @@ export class RepairsTableComponent implements OnInit {
         let index: number = this.repairs.findIndex(r => r.id === repair.id);
         this.repairs[index] = repair;
         this.progressService.done();
+        this.toastrService.success('Zapisano naprawę');
       }, err => {
         this.errorService.handleError(err);
       });
@@ -116,6 +120,7 @@ export class RepairsTableComponent implements OnInit {
         }
 
         this.progressService.done();
+        this.toastrService.success('Usunięto naprawę');
       }, err => {
         this.errorService.handleError(err);
       });

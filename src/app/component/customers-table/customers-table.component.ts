@@ -5,6 +5,7 @@ import {NgProgressService} from "ngx-progressbar";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {StringUtils} from "../../utils/string.utils";
 import {ErrorService} from "../../service/error.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-customers-table',
@@ -29,6 +30,7 @@ export class CustomersTableComponent implements OnInit {
   constructor(private customerService: CustomerService,
               private errorService: ErrorService,
               private progressService: NgProgressService,
+              private toastrService: ToastrService,
               private fb: FormBuilder) {
   }
 
@@ -84,6 +86,7 @@ export class CustomersTableComponent implements OnInit {
         customer.id = res.id;
         this.customers.push(customer);
         this.progressService.done();
+        this.toastrService.success('Zapisano klienta');
       }, err => {
         this.errorService.handleError(err);
       });
@@ -97,6 +100,7 @@ export class CustomersTableComponent implements OnInit {
         let index: number = this.customers.findIndex(c => c.id === customer.id);
         this.customers[index] = customer;
         this.progressService.done();
+        this.toastrService.success('Zapisano klienta');
       }, err => {
         this.errorService.handleError(err);
       });
@@ -117,6 +121,7 @@ export class CustomersTableComponent implements OnInit {
         }
 
         this.progressService.done();
+        this.toastrService.success('Usunięto klienta');
       }, err => {
         this.errorService.handleError(err);
       });

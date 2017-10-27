@@ -8,6 +8,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AppConfig} from "../../configuration/app.config";
 import {StringUtils} from "../../utils/string.utils";
 import {ErrorService} from "../../service/error.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-cars-table',
@@ -34,6 +35,7 @@ export class CarsTableComponent implements OnInit {
               private carService: CarService,
               private errorService: ErrorService,
               private progressService: NgProgressService,
+              private toastrService: ToastrService,
               private fb: FormBuilder) {
   }
 
@@ -115,6 +117,7 @@ export class CarsTableComponent implements OnInit {
         car.id = res.id;
         this.cars.push(car);
         this.progressService.done();
+        this.toastrService.success('Zapisano samochód');
       }, err => {
         this.errorService.handleError(err);
       });
@@ -127,6 +130,7 @@ export class CarsTableComponent implements OnInit {
         let index: number = this.cars.findIndex(c => c.id === car.id);
         this.cars[index] = car;
         this.progressService.done();
+        this.toastrService.success('Zapisano samochód');
       }, err => {
         this.errorService.handleError(err);
       });
@@ -145,6 +149,7 @@ export class CarsTableComponent implements OnInit {
         }
 
         this.progressService.done();
+        this.toastrService.success('Usunięto samochód');
       }, err => {
         this.errorService.handleError(err);
       });
