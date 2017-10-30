@@ -34,8 +34,8 @@
       <div class="input-group">
         <input #pwd type="password" placeholder="Hasło" class="form-control">
         <span class="input-group-btn">
-          <button type="submit" class="btn btn-primary" [disabled]="isAuthenticating()">
-            {{ isAuthenticating() ? 'Czekaj' : 'Zaloguj' }}
+          <button type="submit" class="btn btn-primary" [disabled]="isAuthenticating">
+            {{ isAuthenticating ? 'Czekaj' : 'Zaloguj' }}
           </button>
         </span>
       </div>

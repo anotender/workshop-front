@@ -3,7 +3,7 @@ import {Car} from "../../model/car";
 import {CarService} from "../../service/car.service";
 import {Customer} from "../../model/customer";
 import {CustomerService} from "../../service/customer.service";
-import {NgProgressService} from "ngx-progressbar";
+import {NgProgress} from "ngx-progressbar";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AppConfig} from "../../configuration/app.config";
 import {StringUtils} from "../../utils/string.utils";
@@ -34,7 +34,7 @@ export class CarsTableComponent implements OnInit {
   constructor(private customerService: CustomerService,
               private carService: CarService,
               private errorService: ErrorService,
-              private progressService: NgProgressService,
+              private progress: NgProgress,
               private toastrService: ToastrService,
               private fb: FormBuilder) {
   }
@@ -45,14 +45,14 @@ export class CarsTableComponent implements OnInit {
 
   @Input()
   set customer(customer: Customer) {
-    this.progressService.start();
+    this.progress.start();
     this._customer = customer;
     if (customer) {
       this.customerService
         .getCarsForCustomer(customer.id)
         .subscribe(cars => {
           this.cars = cars;
-          this.progressService.done();
+          this.progress.done();
         }, err => {
           this.errorService.handleError(err);
         });
@@ -61,7 +61,7 @@ export class CarsTableComponent implements OnInit {
         .getCars()
         .subscribe(cars => {
           this.cars = cars;
-          this.progressService.done();
+          this.progress.done();
         }, err => {
           this.errorService.handleError(err);
         });
@@ -92,7 +92,7 @@ export class CarsTableComponent implements OnInit {
     let car: Car = this.mapFormValueToCar(value);
 
     if (value.carId) {
-      this.progressService.start();
+      this.progress.start();
       this.carService
         .getCustomerForCar(value.carId)
         .subscribe(customer => {
@@ -110,13 +110,13 @@ export class CarsTableComponent implements OnInit {
   }
 
   saveCar(car: Car): void {
-    this.progressService.start();
+    this.progress.start();
     this.carService
       .save(car)
       .subscribe(res => {
         car.id = res.id;
         this.cars.push(car);
-        this.progressService.done();
+        this.progress.done();
         this.toastrService.success('Zapisano samochód');
       }, err => {
         this.errorService.handleError(err);
@@ -129,7 +129,7 @@ export class CarsTableComponent implements OnInit {
       .subscribe(res => {
         let index: number = this.cars.findIndex(c => c.id === car.id);
         this.cars[index] = car;
-        this.progressService.done();
+        this.progress.done();
         this.toastrService.success('Zapisano samochód');
       }, err => {
         this.errorService.handleError(err);
@@ -137,7 +137,7 @@ export class CarsTableComponent implements OnInit {
   }
 
   deleteCar(car: Car): void {
-    this.progressService.start();
+    this.progress.start();
     this.carService
       .remove(car.id)
       .subscribe(res => {
@@ -148,7 +148,7 @@ export class CarsTableComponent implements OnInit {
           this.cars.splice(index, 1);
         }
 
-        this.progressService.done();
+        this.progress.done();
         this.toastrService.success('Usunięto samochód');
       }, err => {
         this.errorService.handleError(err);

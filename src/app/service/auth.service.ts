@@ -1,9 +1,15 @@
 import {Injectable} from "@angular/core";
-import {Headers, RequestOptions} from "@angular/http";
+import {Headers, Http, RequestOptions} from "@angular/http";
 import {StringUtils} from "../utils/string.utils";
+import {AppConfig} from "../configuration/app.config";
+import {NgProgress} from "ngx-progressbar";
+import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class AuthService {
+
+  constructor(private http: Http) {
+  }
 
   isAuthenticated(): boolean {
     return !this.isTokenExpired() && StringUtils.isNotBlank(localStorage.getItem('token'));
@@ -13,16 +19,17 @@ export class AuthService {
     localStorage.clear();
   }
 
-  login(username: string, password: string): void {
+  login(username: string, password: string): Observable<any> {
     let token: string = btoa(username + ':' + password);
-    localStorage.setItem('token', token);
-    localStorage.setItem('expirationTime', (new Date().getTime() + 60 * 60 * 1000).toString());
+    return this.http
+      .get(AppConfig.API_PREFIX + '/authenticate', this.getRequestOptions(token))
+      .map(res => token);
   }
 
-  getRequestOptions(): RequestOptions {
+  getRequestOptions(token?: string): RequestOptions {
     let headers: Headers = new Headers({
       'Content-Type': 'application/json',
-      'Authorization': 'Basic ' + this.getToken()
+      'Authorization': 'Basic ' + (StringUtils.isNotEmpty(token) ? token : this.getToken())
     });
     return new RequestOptions({headers: headers});
   }

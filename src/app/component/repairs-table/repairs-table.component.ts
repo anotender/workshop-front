@@ -3,7 +3,7 @@ import {Car} from "../../model/car";
 import {Repair} from "../../model/repair";
 import {RepairService} from "../../service/repair.service";
 import {CarService} from "../../service/car.service";
-import {NgProgressService} from "ngx-progressbar";
+import {NgProgress} from "ngx-progressbar";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ErrorService} from "../../service/error.service";
 import {ToastrService} from "ngx-toastr";
@@ -31,7 +31,7 @@ export class RepairsTableComponent implements OnInit {
   constructor(private carService: CarService,
               private repairService: RepairService,
               private errorService: ErrorService,
-              private progressService: NgProgressService,
+              private progress: NgProgress,
               private toastrService: ToastrService,
               private fb: FormBuilder) {
   }
@@ -42,13 +42,13 @@ export class RepairsTableComponent implements OnInit {
 
   @Input()
   set car(car: Car) {
-    this.progressService.start();
+    this.progress.start();
     this._car = car;
     this.carService
       .getRepairsForCar(car.id)
       .subscribe(repairs => {
         this.repairs = repairs;
-        this.progressService.done();
+        this.progress.done();
       }, err => {
         this.errorService.handleError(err);
       });
@@ -82,13 +82,13 @@ export class RepairsTableComponent implements OnInit {
   }
 
   saveRepair(repair: Repair): void {
-    this.progressService.start();
+    this.progress.start();
     this.repairService
       .save(repair, this._car.id)
       .subscribe(res => {
         repair.id = res.id;
         this.repairs.push(repair);
-        this.progressService.done();
+        this.progress.done();
         this.toastrService.success('Zapisano naprawę');
       }, err => {
         this.errorService.handleError(err);
@@ -96,13 +96,13 @@ export class RepairsTableComponent implements OnInit {
   }
 
   editRepair(repair: Repair): void {
-    this.progressService.start();
+    this.progress.start();
     this.repairService
       .edit(repair.id, repair, this._car.id)
       .subscribe(res => {
         let index: number = this.repairs.findIndex(r => r.id === repair.id);
         this.repairs[index] = repair;
-        this.progressService.done();
+        this.progress.done();
         this.toastrService.success('Zapisano naprawę');
       }, err => {
         this.errorService.handleError(err);
@@ -110,7 +110,7 @@ export class RepairsTableComponent implements OnInit {
   }
 
   deleteRepair(repair: Repair): void {
-    this.progressService.start();
+    this.progress.start();
     this.repairService
       .remove(repair.id)
       .subscribe(res => {
@@ -119,7 +119,7 @@ export class RepairsTableComponent implements OnInit {
           this.repairs.splice(index, 1);
         }
 
-        this.progressService.done();
+        this.progress.done();
         this.toastrService.success('Usunięto naprawę');
       }, err => {
         this.errorService.handleError(err);

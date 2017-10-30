@@ -1,12 +1,12 @@
 import {Injectable} from "@angular/core";
-import {NgProgressService} from "ngx-progressbar";
+import {NgProgress} from "ngx-progressbar";
 import {AuthService} from "./auth.service";
 import {ToastrService} from "ngx-toastr";
 
 @Injectable()
 export class ErrorService {
 
-  constructor(private progressService: NgProgressService,
+  constructor(private progress: NgProgress,
               private authService: AuthService,
               private toastrService: ToastrService) {
   }
@@ -19,7 +19,7 @@ export class ErrorService {
       this.toastrService.error('Błąd');
     }
     console.log(err._body || err);
-    this.progressService.done();
+    this.progress.done();
   }
 
   private isAuthenticationError(err: any): boolean {

@@ -2,7 +2,8 @@ import {Component} from '@angular/core';
 import {Customer} from "./model/customer";
 import {Car} from "./model/car";
 import {AuthService} from "./service/auth.service";
-import {NgProgressService} from "ngx-progressbar";
+import {NgProgress} from "ngx-progressbar";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-root',
@@ -14,21 +15,35 @@ export class AppComponent {
   selectedCar: Car = null;
   customerMode: boolean = false;
   carMode: boolean = true;
+  isAuthenticating: boolean = false;
 
-  constructor(private authService: AuthService, private progressService: NgProgressService) {
+  constructor(private authService: AuthService,
+              private progress: NgProgress,
+              private toastrService: ToastrService) {
   }
 
   isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
   }
 
-  isAuthenticating(): boolean {
-    return this.progressService.isStarted();
-  }
-
   login(password: string): void {
+    this.progress.start();
+    this.isAuthenticating = true;
     this.clearSelections();
-    this.authService.login('username', password);
+    this.authService
+      .login('username', password)
+      .subscribe(token => {
+        localStorage.setItem('token', token);
+        localStorage.setItem('expirationTime', (new Date().getTime() + 60 * 60 * 1000).toString());
+        this.isAuthenticating = false;
+        this.progress.done();
+        this.toastrService.success('Zalogowano');
+      }, err => {
+        console.log(err);
+        this.isAuthenticating = false;
+        this.progress.done();
+        this.toastrService.error('Brak dostępu');
+      });
   }
 
   handleCustomerSelected(customer: Customer): void {

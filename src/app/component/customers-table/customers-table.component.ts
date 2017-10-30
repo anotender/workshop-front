@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Customer} from "../../model/customer";
 import {CustomerService} from "../../service/customer.service";
-import {NgProgressService} from "ngx-progressbar";
+import {NgProgress} from "ngx-progressbar";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {StringUtils} from "../../utils/string.utils";
 import {ErrorService} from "../../service/error.service";
@@ -29,19 +29,19 @@ export class CustomersTableComponent implements OnInit {
 
   constructor(private customerService: CustomerService,
               private errorService: ErrorService,
-              private progressService: NgProgressService,
+              private progress: NgProgress,
               private toastrService: ToastrService,
               private fb: FormBuilder) {
   }
 
   ngOnInit(): void {
-    this.progressService.start();
+    this.progress.start();
     this.customerForm = this.initCustomerForm();
     this.customerService
       .getCustomers()
       .subscribe(customers => {
         this.customers = customers;
-        this.progressService.done();
+        this.progress.done();
       }, err => {
         this.errorService.handleError(err);
       });
@@ -79,13 +79,13 @@ export class CustomersTableComponent implements OnInit {
   }
 
   saveCustomer(customer: Customer): void {
-    this.progressService.start();
+    this.progress.start();
     this.customerService
       .save(customer)
       .subscribe(res => {
         customer.id = res.id;
         this.customers.push(customer);
-        this.progressService.done();
+        this.progress.done();
         this.toastrService.success('Zapisano klienta');
       }, err => {
         this.errorService.handleError(err);
@@ -93,13 +93,13 @@ export class CustomersTableComponent implements OnInit {
   }
 
   editCustomer(customer: Customer): void {
-    this.progressService.start();
+    this.progress.start();
     this.customerService
       .edit(customer.id, customer)
       .subscribe(res => {
         let index: number = this.customers.findIndex(c => c.id === customer.id);
         this.customers[index] = customer;
-        this.progressService.done();
+        this.progress.done();
         this.toastrService.success('Zapisano klienta');
       }, err => {
         this.errorService.handleError(err);
@@ -107,7 +107,7 @@ export class CustomersTableComponent implements OnInit {
   }
 
   deleteCustomer(customer: Customer): void {
-    this.progressService.start();
+    this.progress.start();
     this.customerService
       .remove(customer.id)
       .subscribe(res => {
@@ -120,7 +120,7 @@ export class CustomersTableComponent implements OnInit {
           this.customers.splice(index, 1);
         }
 
-        this.progressService.done();
+        this.progress.done();
         this.toastrService.success('Usunięto klienta');
       }, err => {
         this.errorService.handleError(err);
